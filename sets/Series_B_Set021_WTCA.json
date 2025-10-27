@@ -1,0 +1,14 @@
+[
+  {
+    "question": "कंप्यूटर  क्या है?",
+    "options": ["Common Operating Machine", "Commonly Operated Machine", "Common Operating Machine Particularly Used for Technical and Educational Research", "None"],
+    "answer": [2],
+    "explanation": "कंप्यूटर का पूरा नाम: <strong>Common Operating Machine Particularly Used for Technical and Educational Research</strong>"
+  },
+  {
+    "question": "CPU क्या है?",
+    "options": ["डेटा स्टोर करना", "प्रोग्राम चलाना", "प्रिंट करना", "स्कैन करना"],
+    "answer": [1],
+    "explanation": "CPU प्रोग्राम के निर्देशों को चलाता है।"
+  }
+]
