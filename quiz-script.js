@@ -56,11 +56,11 @@ function loadJSON() {
       }
     }
     // Continue with quiz if new attempt or user confirms retry
-    loadQuizFiles();
+    loadQuizFiles(file);
   });
 }
 
-function loadQuizFiles() {
+function loadQuizFiles(file) {
 
   const match = file.match(/(Series_[A-Z])_Set(\d{3})_WTCA\.json/);
   if (!match) return alert("Invalid file name!");
