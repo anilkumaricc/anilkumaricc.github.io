@@ -61,26 +61,49 @@ function loadJSON() {
 }
 
 function loadQuizFiles(file) {
+  console.log("loadQuizFiles called with file:", file);
 
-  const match = file.match(/(Series_[A-Z])_Set(\d{3})_WTCA\.json/);
-  if (!match) return alert("Invalid file name!");
+  const match = (file || '').match(/(Series_[A-Z])_Set(\d{3})_WTCA\.json/);
+  if (!match) {
+    const msg = `Invalid file name or missing 'set' parameter: ${file}`;
+    console.error(msg);
+    return document.body.innerHTML = `<h2 style="color:red">${msg}</h2>`;
+  }
 
   const series = match[1], setNum = match[2];
   const quizPath = `sets/${file}`;
   const hwPath = `hw/${series}_Set${setNum}_HW.json`;
+  console.log("Attempting to fetch quizPath:", quizPath, "hwPath:", hwPath);
 
   fetch(quizPath)
-    .then(r => r.ok ? r.json() : Promise.reject("Quiz not found"))
+    .then(async r => {
+      if (!r.ok) {
+        const txt = await r.text().catch(() => '<<no body>>');
+        return Promise.reject(`Quiz fetch failed: ${quizPath} (status ${r.status}) -> ${txt}`);
+      }
+      try {
+        return r.json();
+      } catch (e) {
+        const txt = await r.text().catch(() => '<<invalid json>>');
+        return Promise.reject(`Quiz JSON parse error for ${quizPath}: ${txt}`);
+      }
+    })
     .then(data => {
       questions = data;
       document.getElementById("totalQuestions").textContent = questions.length;
-      return fetch(hwPath).then(r => r.ok ? r.json() : ["No HW"]);
+      return fetch(hwPath).then(async r => {
+        if (!r.ok) return ["No HW"];
+        try { return r.json(); } catch { return ["No HW"]; }
+      });
     })
     .then(hw => {
       allHomework = Array.isArray(hw) ? hw : [hw];
       startQuiz();
     })
-    .catch(err => document.body.innerHTML = `<h2 style="color:red">${err}</h2>`);
+    .catch(err => {
+      console.error(err);
+      document.body.innerHTML = `<h2 style="color:red">${String(err)}</h2>`;
+    });
 }
 
 function startQuiz() {
