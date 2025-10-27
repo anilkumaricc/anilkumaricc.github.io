@@ -1,0 +1,111 @@
+<!-- FILE: index.html -->
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <title>WTCA ADCA Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Gradient Attractive Title -->
+  <h1 class="quiz-heading">ADCA Daily Quiz Practice</h1>
+
+  <div class="container-flex">
+    <!-- LEFT: Student Info -->
+    <div class="student-form">
+      <h2 style="text-align: center; margin-bottom: 20px;">Student Details</h2>
+      <div class="form-group">
+        <!-- Student Name Input -->
+         <label>Name</label>
+      <input type="text" id="studentName" placeholder="अपना पूरा नाम यहाँ लिखिए" autocomplete="off" />
+      <p id="namePreview" style="margin-top:10px; font-size:1.2rem; font-weight:600; color:#0078d7;"></p>
+      </div>
+      <div class="form-group">
+        <label>Father's Name</label>
+        <input type="text" id="fatherName" placeholder="पिता का नाम यहाँ लिखिए" autocomplete="off" />
+      </div>
+      <div class="form-group">
+        <label>Roll No (001–250)</label>
+        <input type="text" id="rollNo" placeholder="रोल नंबर (001 से 250)" maxlength="3" autocomplete="off" />
+      </div>
+      <div class="form-group">
+        <label>Mobile (6-9 से शुरू)</label>
+        <input type="tel" id="mobile" placeholder="10 अंक का मोबाइल नंबर" maxlength="10" autocomplete="off" />
+      </div>
+      <div class="form-group">
+        <label>Series</label>
+        <select id="seriesSelect">
+          <option value="">-- Series चुनें --</option>
+          <option value="Series_A">Series A Fundamental Only</option>
+          <option value="Series_B">Series B Fundamental OS</option>
+          <option value="Series_C">Series C MS Office</option>
+          <option value="Series_D">Series D Internet</option>
+          <option value="Series_E">Series E LibreOffice</option>
+          <option value="Series_F">Series F CCC</option>
+          <option value="Series_G">Series G AI, Linux, Google</option>
+          <option value="Series_H">Series H Tally</option>
+          <option value="Series_I">Series I DTP Tools</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Set</label>
+        <select id="setSelect"><option value="">-- Set चुनें --</option></select>
+      </div>
+
+      <!-- HW Label with Tick in Center -->
+      <label class="hw-label">
+        (HW ? 10-10 Marks Deduction for Not Done)
+        <input type="checkbox" id="hwDone" />
+        <span class="hw-done-text">HW Done</span>
+      </label>
+
+      <button id="startQuiz">Start Quiz</button>
+
+      <!-- Motivational Line -->
+      <div class="hw-note-box">
+  <h3>📗 गृहकार्य का महत्व</h3>
+  <p>
+    गृहकार्य से आपका <strong style="color:#0078d7;">ज्ञान मजबूत</strong> होता है, 
+    <strong style="color:#d81b60;">गलतियाँ सुधारती</strong> हैं और 
+    <strong style="color:#28a745;">परीक्षा में 100% सफलता</strong> मिलती है।<br/>
+    <span style="color:#e65100; font-weight:600;">रोज़ाना HW करें – सफलता आपकी मुट्ठी में!</span>
+  </p>
+</div>
+</div>
+
+    <!-- RIGHT: Series Table -->
+    <div class="series-info">
+      <h2 style="text-align: center; margin-bottom: 20px;">Available Series & Sets</h2>
+      <table class="series-table">
+       <div class="form-group">
+        <thead>
+          <tr><th>Series</th><th>Subjects</th><th>Set Range</th><th>Level</th><th>Sets</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Series_A</td><td>कंप्यूटर फंडामेंटल्स</td><td>Set001–Set020</td><td>शुरुआती</td><td>20</td></tr>
+          <tr><td>Series_B</td><td>ऑपरेटिंग सिस्टम</td><td>Set021–Set040</td><td>बेसिक</td><td>20</td></tr>
+          <tr><td>Series_C</td><td>MS Office</td><td>Set041–Set080</td><td>मध्यम</td><td>40</td></tr>
+          <tr><td>Series_D</td><td>LibreOffice</td><td>Set081–Set105</td><td>मध्यम</td><td>25</td></tr>
+          <tr><td>Series_E</td><td>इंटरनेट</td><td>Set106–Set120</td><td>मध्यम</td><td>15</td></tr>
+          <tr><td>Series_F</td><td>CCC</td><td>Set121–Set155</td><td>उन्नत</td><td>35</td></tr>
+          <tr><td>Series_G</td><td>AI, Linux</td><td>Set156–Set170</td><td>विशेष</td><td>15</td></tr>
+          <tr><td>Series_H</td><td>Tally</td><td>Set171–Set190</td><td>विशेष</td><td>20</td></tr>
+          <tr><td>Series_I</td><td>DTP Tools</td><td>Set191–Set205</td><td>विशेष</td><td>15</td></tr>
+        </tbody>
+      </table>
+      <div class="quiz-note-box">
+  <h3>📘 क्विज़ का महत्व</h3>
+  <p>
+    क्विज़ से आपका <strong style="color:#0078d7;">ज्ञान तेज़ी से बढ़ता</strong> है, 
+    <strong style="color:#d81b60;">कमजोरियाँ दूर होती</strong> हैं, और 
+    <strong style="color:#28a745;">परीक्षा में उच्च अंक</strong> प्राप्त होते हैं।<br/>
+    <span style="color:#e65100; font-weight:600;">रोज़ाना क्विज़ करें – सफलता की कुंजी आपके हाथ में है!</span>
+  </p>
+  </div>
+  </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

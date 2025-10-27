@@ -1,0 +1,202 @@
+/* ========================================
+   FILE: quiz-style.css
+   WTCA ADCA Daily Quiz – Super Attractive UI
+   ======================================== */
+
+body {
+  background: linear-gradient(120deg, #f5faff 0%, #e8f3fb 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #1a1a1a;
+}
+
+.quiz-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 36px 38px;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 120, 215, .15);
+  border: 1px solid #d0e8ff;
+}
+
+/* ===== TITLE – Gradient + Shadow ===== */
+.main-title {
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  box-shadow: 0 6px 16px rgba(59, 130, 246, .3);
+  letter-spacing: .5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+}
+
+/* ===== HEADER – Time, Q No, +1 Min ===== */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #ff8c00, #f28202);
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 140, 0, .3);
+}
+
+/* ===== MAIN LAYOUT – Left: Question | Right: HW + Prev Q ===== */
+.main-panel {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.question-panel {
+  flex: 2.2;
+  min-width: 0;
+}
+
+/* ===== QUESTION TEXT – Boxed + Blue Border ===== */
+.question-text {
+  font-size: 1.28rem;
+  font-weight: 600;
+  margin-bottom: 22px;
+  color: #1a1a1a;
+  line-height: 1.5;
+  background: #f8fcff;
+  padding: 18px;
+  border-radius: 12px;
+  border-left: 5px solid #0078d7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+}
+
+/* ===== OPTIONS – Vertical, Big, Hover Effect ===== */
+.options-area {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.option-btn {
+  background: #f8fcff;
+  border: 1.8px solid #b8d6ee;
+  padding: 16px 18px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .3s ease;
+  text-align: left;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .05);
+}
+
+.option-btn:hover {
+  background: #e0f3ff;
+  border-color: #0078d7;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 120, 215, .2);
+}
+
+/* Selected (User Clicked) */
+.option-btn.selected {
+  background: #d4edda !important;
+  border-color: #28a745 !important;
+  color: #155724;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(40, 167, 69, .4);
+}
+
+/* Correct Answer (After Submit) */
+.option-btn.correct {
+  background: #d4edda;
+  border-color: #28a745;
+  color: #155724;
+  font-weight: 700;
+}
+
+/* Wrong Answer */
+.option-btn.incorrect {
+  background: #f8d7da;
+  border-color: #dc3545;
+  color: #721c24;
+}
+
+/* ===== SKIP & NEXT BUTTONS – Big, Beautiful, Animated ===== */
+.quiz-actions {
+  display: flex;
+  gap: 18px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.quiz-actions button {
+  background: #0078d7;
+  color: white;
+  padding: 16px 32px;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .3s ease;
+  min-width: 180px;
+  box-shadow: 0 6px 16px rgba(0, 120, 215, .3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.quiz-actions button:hover {
+  background: #005bb5;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 120, 215, .4);
+}
+
+/* Skip Button – Orange */
+#skipBtn {
+  background: #ffc107;
+  color: #333;
+  border: 2px solid #ffb300;
+}
+
+#skipBtn:hover {
+  background: #e0a800;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(255, 193, 7, .4);
+}
+
+/* Next Button – Green */
+#nextBtn {
+  background: #28a745;
+  color: white;
+}
+
+#nextBtn:hover {
+  background: #218838;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(40, 167, 69, .4);
+}
+
+/* ===== BIG ANSWER DISPLAY BELOW BUTTONS ===== */
+.answer-display {
+  margin-top: 28px;
+  padding: 20px;
+  background: #f8fcff;
+  border-radius: 14px;
+  border-left: 6px solid #0078d7;
+  box-shadow: 0 6px 16px rgba(0, 120, 215, .15);
+  font-size: 1.2rem;
+  line-height: 1.7;
+}

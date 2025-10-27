@@ -1,0 +1,109 @@
+<!-- FILE: quiz.html -->
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8"/>
+  <title>WTCA Quiz</title>
+  <link rel="stylesheet" href="quiz-style.css"/>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2 class="main-title">ADCA प्रतिदिन परीक्षा प्रणाली</h2>
+    <div class="quiz-header">
+      <div>कुल समय | Total Time: <span id="totalTime">00:00</span></div>
+      <div>प्रश्न <span id="questionNumber">1</span>/<span id="totalQuestions">0</span></div>
+      <div>समय शेष: <span id="timeLeft">01:00</span></div>
+      <button id="addTime">+1 Min</button>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div id="mainPanel" class="main-panel">
+      <!-- LEFT: Question + Options + Big Answer -->
+      <div class="question-panel">
+        <div id="questionArea" class="question-text"></div>
+        <div id="optionsArea" class="options-area"></div>
+        <div class="quiz-actions">
+          <button id="skipBtn">स्किप करें | Skip</button>
+          <button id="nextBtn" style="display:none;">अगला प्रश्न | Next</button>
+        </div>
+
+        <!-- Big Answer Box Below Buttons -->
+        <div id="answerDisplay" class="answer-display" style="display:none;">
+          <h3>आपका उत्तर और सही उत्तर</h3>
+          <p id="userAnswer"></p>
+          <p id="correctAnswer"></p>
+          <p id="explanationText"></p>
+        </div>
+      </div>
+
+      <!-- RIGHT: Previous Q + HW -->
+      <div class="answer-panel">
+        <div id="previousQ" class="previous-review" style="display:none;">
+          <h3>पिछला प्रश्न</h3>
+          <p id="previousQuestion"></p>
+          <p id="previousUserAnswer"></p>
+          <p id="previousCorrectAnswer"></p>
+          <p id="previousExplanation"></p>
+        </div>
+
+        <div id="homeworkBox" class="homework-box">
+          <h3>गृहकार्य | Homework</h3>
+          <ul id="homeworkList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARY PANEL -->
+    <div id="summaryPanel" style="display:none;">
+      <div class="summary-container">
+        <div class="summary-left">
+          <h2 class="completion-title">Quiz Completed!</h2>
+          <p class="score-line">अंक | Score: <strong id="scoreDisplay">0</strong> / <strong id="totalQs">0</strong></p>
+          <p class="percentage-line">प्रतिशत | Percentage: <strong id="percentageDisplay">0</strong>%</p>
+          <h3 class="review-title">सभी प्रश्नों का रिव्यू</h3>
+          <div id="review" class="review-list"></div>
+        </div>
+
+        <div class="summary-right">
+          <div class="student-card">
+            <h3>Student Information</h3>
+            <ul id="studentInfoList">
+              <li><strong>Name:</strong> <span id="infoName">-</span></li>
+              <li><strong>Father's Name:</strong> <span id="infoFather">-</span></li>
+              <li><strong>Roll No:</strong> <span id="infoRoll">-</span></li>
+              <li><strong>Series:</strong> <span id="infoSeries">-</span></li>
+              <li><strong>Set:</strong> <span id="infoSet">-</span></li>
+              <li><strong>HW Done:</strong> <span id="infoHW">-</span></li>
+            </ul>
+          </div>
+          <div class="homework-card">
+            <h3>गृहकार्य | Homework</h3>
+            <ul id="allHomeworkList"></ul>
+          </div>
+          <!-- Student Info Box -->
+          <div class="student-summary-box">
+          <h3>🧑 छात्र की जानकारी</h3>
+          <ul>
+          <li><strong>नाम:</strong> <span id="summaryName">-</span></li>
+          <li><strong>पिता का नाम:</strong> <span id="summaryFather">-</span></li>
+          <li><strong>रोल नंबर:</strong> <span id="summaryRoll">-</span></li>
+          <li><strong>मोबाइल:</strong> <span id="summaryMobile">-</span></li>
+          <li><strong>सीरीज़:</strong> <span id="summarySeries">-</span></li>
+          <li><strong>सेट:</strong> <span id="summarySet">-</span></li>
+  </ul>
+</div>
+
+<!-- Past Quiz History -->
+<div id="studentHistory" style="margin-top:30px;"></div>
+
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:30px;">
+        <button onclick="window.print()" class="print-btn">Print Result</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="quiz-script.js"></script>
+</body>
+</html>
