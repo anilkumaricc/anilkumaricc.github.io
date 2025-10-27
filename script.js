@@ -89,10 +89,31 @@ document.getElementById('startQuiz').addEventListener('click', function () {
     return;
   }
 
-  // Generate unique student ID
-  const nameId = name.replace(/\s+/g, '').slice(0, 3).toUpperCase();
-  const fatherId = father.replace(/\s+/g, '').slice(0, 3).toUpperCase();
-  const studentId = nameId + fatherId + roll;
+  // Generate identifier in new format: SeriesLetter + SetNumber + RollNumber (e.g., A001085)
+  function makeIdentifier(series, set, roll) {
+    let seriesLetter = '';
+    if (typeof series === 'string') {
+      const m = series.match(/Series_([A-Z])/) || series.match(/^([A-Z])$/);
+      if (m) seriesLetter = m[1];
+    }
+    if (!seriesLetter && typeof set === 'string') {
+      const m2 = set.match(/Series_([A-Z])/);
+      if (m2) seriesLetter = m2[1];
+    }
+    seriesLetter = (seriesLetter || '').toUpperCase();
+    let setNumber = '000';
+    if (typeof set === 'string') {
+      const ms = set.match(/Set(\d{3})/);
+      if (ms) setNumber = ms[1];
+    }
+    if (setNumber === '000' && typeof series === 'string') {
+      const ms2 = series.match(/Set(\d{3})/);
+      if (ms2) setNumber = ms2[1];
+    }
+    const rollNumber = String(roll || '').padStart(3, '0');
+    return (seriesLetter + setNumber + rollNumber).toUpperCase();
+  }
+  const studentId = makeIdentifier(series, set, roll);
 
   // Prevent duplicate quiz attempt
   const examKey = `${studentId}_${series}_${set}`;
