@@ -117,21 +117,37 @@ function startQuiz() {
 }
 
 function showQuestion() {
+  console.log("showQuestion() called. current:", current, "questions.length:", questions.length);
+  if (!Array.isArray(questions) || questions.length === 0) {
+    const msg = "कोई प्रश्न उपलब्ध नहीं हैं (questions array खाली है)";
+    console.error(msg, { questions });
+    document.getElementById("questionArea").innerHTML = `<p style=\"color:red;\">${msg}</p>`;
+    document.getElementById("optionsArea").innerHTML = '';
+    return;
+  }
+
   if (current >= questions.length) return showSummary();
 
   const q = questions[current];
+  console.log("Rendering question:", q);
   document.getElementById("questionNumber").textContent = current + 1;
   document.getElementById("questionArea").innerHTML = `<p><strong>${q.question}</strong></p>`;
 
   const opts = document.getElementById("optionsArea");
   opts.innerHTML = "";
-  q.options.forEach((opt, i) => {
-    const btn = document.createElement("button");
-    btn.className = "option-btn";
-    btn.textContent = opt;
-    btn.onclick = () => selectOption(i);
-    opts.appendChild(btn);
-  });
+  if (!q || !Array.isArray(q.options) || q.options.length === 0) {
+    const msg = "प्रश्न में विकल्प उपलब्ध नहीं हैं। JSON में 'options' फील्ड चेक करें।";
+    console.error(msg, { q });
+    opts.innerHTML = `<p style=\"color:red;\">${msg}</p>`;
+  } else {
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.textContent = opt;
+      btn.onclick = () => selectOption(i);
+      opts.appendChild(btn);
+    });
+  }
 
   document.getElementById("nextBtn").style.display = "none";
   document.getElementById("skipBtn").style.display = "inline-block";
