@@ -180,7 +180,6 @@ function showSummary() {
 
   // Send to Google Sheet
   const sheetURL = "https://script.google.com/macros/s/AKfycby2ElAenHy59_M3EhRQx0Mf5mijglA-u1bgJhWyDBN2NOXicUpmR3K0C6ZkqWvfQoPIjA/exec";
-;
   fetch(sheetURL, {
     method: "POST",
     body: JSON.stringify({
