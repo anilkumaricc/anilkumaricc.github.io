@@ -9,9 +9,58 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById("nextBtn").onclick = nextQuestion;
 });
 
+// Check if student has already taken this quiz
+async function checkPreviousAttempt(series, set, roll) {
+  try {
+    const seriesLetter = series.replace("Series_", "").charAt(0);
+    const setNumber = set.match(/Set(\d+)/)?.[1] || "000";
+    const rollNumber = roll.padStart(3, "0");
+    const identifier = (seriesLetter + setNumber + rollNumber).toUpperCase();
+    
+    const response = await fetch(`${sheetURL}?id=${identifier}`);
+    const data = await response.json();
+    
+    if (Array.isArray(data) && data.length > 0) {
+      const latestAttempt = data[data.length - 1]; // Get most recent attempt
+      const attemptDate = new Date(latestAttempt[0]).toLocaleDateString();
+      const score = latestAttempt[7]; // score column
+      const total = latestAttempt[8]; // total column
+      return {
+        exists: true,
+        message: `आपने यह प्रश्न सेट पहले ही ${attemptDate} को हल कर लिया है। स्कोर: ${score}/${total}`
+      };
+    }
+    return { exists: false };
+  } catch (err) {
+    console.error("Check attempt error:", err);
+    return { exists: false }; // Proceed even if check fails
+  }
+}
+
 function loadJSON() {
   const file = new URLSearchParams(window.location.search).get("set");
   if (!file) return alert("Set file missing!");
+  
+  // Get student data
+  const s = JSON.parse(localStorage.getItem('studentData') || '{}');
+  if (!s.roll || !s.series || !file) {
+    return alert("सभी जानकारी भरें (रोल नंबर, सीरीज़, और सेट)");
+  }
+
+  // First check if already attempted
+  checkPreviousAttempt(s.series, file, s.roll).then(result => {
+    if (result.exists) {
+      if (!confirm(result.message + "\n\nक्या आप फिर से हल करना चाहते हैं?")) {
+        window.location.href = "index.html";
+        return;
+      }
+    }
+    // Continue with quiz if new attempt or user confirms retry
+    loadQuizFiles();
+  });
+}
+
+function loadQuizFiles() {
 
   const match = file.match(/(Series_[A-Z])_Set(\d{3})_WTCA\.json/);
   if (!match) return alert("Invalid file name!");
@@ -134,7 +183,11 @@ function showSummary() {
   document.getElementById("summaryPanel").style.display = "block";
 
   const s = JSON.parse(localStorage.getItem('studentData') || '{}');
-  const studentId = (s.name.split(" ")[0] + s.father.split(" ")[0] + s.roll).toLowerCase();
+  // Create identifier from Series + Set + Roll (e.g., "A001085")
+  const seriesLetter = (s.series || "").replace("Series_", "").charAt(0);
+  const setNumber = (s.set || "").match(/Set(\d+)/)?.[1] || "000";
+  const rollNumber = (s.roll || "").padStart(3, "0");
+  const studentId = (seriesLetter + setNumber + rollNumber).toUpperCase();
 
   let finalScore = score;
   if (!s.hwDone) finalScore -= 10;
