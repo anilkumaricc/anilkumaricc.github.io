@@ -48,9 +48,22 @@ document.addEventListener('DOMContentLoaded', function() {
 async function checkPreviousAttempt(series, set, roll) {
   try {
     const identifier = makeIdentifier(series, set, roll);
-    
-    const response = await fetch(`${sheetURL}?id=${identifier}`);
-    const data = await response.json();
+    const url = `${sheetURL}?id=${identifier}`;
+    console.log("checkPreviousAttempt: identifier=", identifier, "url=", url);
+    const response = await fetch(url);
+    if (!response.ok) {
+      const txt = await response.text().catch(() => '<<no body>>');
+      console.warn(`checkPreviousAttempt: non-OK response ${response.status} -> ${txt}`);
+      return { exists: false };
+    }
+    let data;
+    try {
+      data = await response.json();
+    } catch (e) {
+      const txt = await response.text().catch(() => '<<invalid json>>');
+      console.warn("checkPreviousAttempt: invalid JSON response:", txt);
+      return { exists: false };
+    }
     
     if (Array.isArray(data) && data.length > 0) {
       const latestAttempt = data[data.length - 1]; // Get most recent attempt
