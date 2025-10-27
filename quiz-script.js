@@ -179,7 +179,7 @@ function showSummary() {
     document.getElementById("allHomeworkList").innerHTML = allHomework.map(hw => `<li>${hw}</li>`).join('');
 
   // Send to Google Sheet
-  const sheetURL = "https://script.google.com/macros/s/AKfycbw-17uSQ9Hj3BluuZGDyfhxRzgnwyZWRybKK1Ec8gyh7eSPweKBVJrPZLLXoZUYthBbBw/exec";
+  const sheetURL = "https://script.google.com/macros/s/AKfycbx4WuvzB7R3m8RCbiKZwGNm4g713baJuprDFKfWt__m8RyA9x9rjyJPzfTp5sC6qSm2zQ/exec";
   console.log("Sending data to sheet:", studentId); // Debug log
   // Log data before sending it
   const postData = {
@@ -233,7 +233,7 @@ function showSummary() {
   });
 
   // Fetch past quiz history
-  const historyURL = `https://script.google.com/macros/s/AKfycbw-17uSQ9Hj3BluuZGDyfhxRzgnwyZWRybKK1Ec8gyh7eSPweKBVJrPZLLXoZUYthBbBw/exec?id=${studentId}`;
+  const historyURL = `https://script.google.com/macros/s/AKfycbx4WuvzB7R3m8RCbiKZwGNm4g713baJuprDFKfWt__m8RyA9x9rjyJPzfTp5sC6qSm2zQ/exec?id=${studentId}`;
   fetch(historyURL)
     .then(r => r.json())
     .then(data => {
