@@ -179,9 +179,9 @@ function showSummary() {
     document.getElementById("allHomeworkList").innerHTML = allHomework.map(hw => `<li>${hw}</li>`).join('');
 
   // Send to Google Sheet
-  const sheetURL = "https://script.google.com/macros/s/AKfycby2ElAenHy59_M3EhRQx0Mf5mijglA-u1bgJhWyDBN2NOXicUpmR3K0C6ZkqWvfQoPIjA/exec";
+  const sheetURL = "https://script.google.com/macros/s/AKfycbw-17uSQ9Hj3BluuZGDyfhxRzgnwyZWRybKK1Ec8gyh7eSPweKBVJrPZLLXoZUYthBbBw/exec";
   console.log("Sending data to sheet:", studentId); // Debug log
-  // Log data before sending
+  // Log data before sending it
   const postData = {
     name: s.name,
     father: s.father,
@@ -197,34 +197,43 @@ function showSummary() {
   };
   console.log("Sending data:", postData);
 
+  // Send as application/x-www-form-urlencoded to avoid preflight OPTIONS
+  const formBody = new URLSearchParams();
+  Object.keys(postData).forEach(k => {
+    // Ensure undefined/null are sent as empty string
+    formBody.append(k, postData[k] == null ? '' : String(postData[k]));
+  });
+
   fetch(sheetURL, {
     method: "POST",
-    body: JSON.stringify(postData),
-    headers: { 
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    },
-    mode: 'cors'
+    body: formBody // browser will set Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    // do NOT set custom headers here (avoids preflight)
   })
   .then(response => {
-    console.log("Response status:", response.status);
-    return response.json();
+    console.log("Response status:", response.status, response.type);
+    return response.text(); // parse as text first for better debugging
   })
-  .then(result => {
-    console.log("Sheet response:", result);
-    if (result.status === "success") {
-      alert("✅ आपका परिणाम सफलतापूर्वक Google Sheet में सुरक्षित हो गया है!");
-    } else {
-      alert("⚠️ परिणाम सुरक्षित नहीं हो पाया: " + result.message);
+  .then(text => {
+    try {
+      const result = JSON.parse(text);
+      console.log("Sheet response:", result);
+      if (result.status === "success") {
+        alert("✅ आपका परिणाम सफलतापूर्वक Google Sheet में सुरक्षित हो गया है!");
+      } else {
+        alert("⚠️ परिणाम सुरक्षित नहीं हो पाया: " + (result.message || text));
+      }
+    } catch (err) {
+      console.log("Non-JSON response from sheet:", text);
+      alert("⚠️ सर्वर से अप्रत्याशित प्रतिक्रिया मिली: देखिए कंसोल");
     }
   })
   .catch(error => {
     console.error("Google Sheet भेजने में त्रुटि:", error);
-    alert("⚠️ डेटा भेजने में समस्या: " + error.message);
+    alert("⚠️ डेटा भेजने में समस्या: " + (error && error.message ? error.message : error));
   });
 
   // Fetch past quiz history
-  const historyURL = `https://script.google.com/macros/s/AKfycby2ElAenHy59_M3EhRQx0Mf5mijglA-u1bgJhWyDBN2NOXicUpmR3K0C6ZkqWvfQoPIjA/exec?id=${studentId}`;
+  const historyURL = `https://script.google.com/macros/s/AKfycbw-17uSQ9Hj3BluuZGDyfhxRzgnwyZWRybKK1Ec8gyh7eSPweKBVJrPZLLXoZUYthBbBw/exec?id=${studentId}`;
   fetch(historyURL)
     .then(r => r.json())
     .then(data => {
