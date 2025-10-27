@@ -2,6 +2,41 @@ let questions = [], current = 0, timer = 60, interval, totalTime = 0;
 let userAnswers = [], score = 0, allHomework = [];
 let prevQ = null, prevUser = null, prevCorrect = null, prevExp = null;
 
+// Global sheet endpoint used for history/checks and posting results
+const sheetURL = "https://script.google.com/macros/s/AKfycbx4WuvzB7R3m8RCbiKZwGNm4g713baJuprDFKfWt__m8RyA9x9rjyJPzfTp5sC6qSm2zQ/exec";
+
+// Build identifier in the new format: {SeriesLetter}{SetNumber}{RollNumber} e.g. A001085
+function makeIdentifier(series, set, roll) {
+  // series: 'Series_A' or 'A'
+  // set: 'Set001' or filename 'Series_A_Set001_WTCA.json'
+  let seriesLetter = '';
+  if (typeof series === 'string') {
+    const m = series.match(/Series_([A-Z])/) || series.match(/^([A-Z])$/);
+    if (m) seriesLetter = m[1];
+  }
+  // fallback: try to extract from set filename
+  if (!seriesLetter && typeof set === 'string') {
+    const m2 = set.match(/Series_([A-Z])/);
+    if (m2) seriesLetter = m2[1];
+  }
+  seriesLetter = (seriesLetter || '').toUpperCase();
+
+  // extract set number (three digits)
+  let setNumber = '000';
+  if (typeof set === 'string') {
+    const ms = set.match(/Set(\d{3})/);
+    if (ms) setNumber = ms[1];
+  }
+  // fallback: maybe series string contains set
+  if (setNumber === '000' && typeof series === 'string') {
+    const ms2 = series.match(/Set(\d{3})/);
+    if (ms2) setNumber = ms2[1];
+  }
+
+  const rollNumber = String(roll || '').padStart(3, '0');
+  return (seriesLetter + setNumber + rollNumber).toUpperCase();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   loadJSON();
   document.getElementById("skipBtn").onclick = skipQuestion;
@@ -12,10 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Check if student has already taken this quiz
 async function checkPreviousAttempt(series, set, roll) {
   try {
-    const seriesLetter = series.replace("Series_", "").charAt(0);
-    const setNumber = set.match(/Set(\d+)/)?.[1] || "000";
-    const rollNumber = roll.padStart(3, "0");
-    const identifier = (seriesLetter + setNumber + rollNumber).toUpperCase();
+    const identifier = makeIdentifier(series, set, roll);
     
     const response = await fetch(`${sheetURL}?id=${identifier}`);
     const data = await response.json();
@@ -223,10 +255,7 @@ function showSummary() {
 
   const s = JSON.parse(localStorage.getItem('studentData') || '{}');
   // Create identifier from Series + Set + Roll (e.g., "A001085")
-  const seriesLetter = (s.series || "").replace("Series_", "").charAt(0);
-  const setNumber = (s.set || "").match(/Set(\d+)/)?.[1] || "000";
-  const rollNumber = (s.roll || "").padStart(3, "0");
-  const studentId = (seriesLetter + setNumber + rollNumber).toUpperCase();
+  const studentId = makeIdentifier(s.series, s.set, s.roll);
 
   let finalScore = score;
   if (!s.hwDone) finalScore -= 10;
@@ -271,7 +300,6 @@ function showSummary() {
     document.getElementById("allHomeworkList").innerHTML = allHomework.map(hw => `<li>${hw}</li>`).join('');
 
   // Send to Google Sheet
-  const sheetURL = "https://script.google.com/macros/s/AKfycbx4WuvzB7R3m8RCbiKZwGNm4g713baJuprDFKfWt__m8RyA9x9rjyJPzfTp5sC6qSm2zQ/exec";
   console.log("Sending data to sheet:", studentId); // Debug log
   // Log data before sending it
   const postData = {
@@ -325,7 +353,7 @@ function showSummary() {
   });
 
   // Fetch past quiz history
-  const historyURL = `https://script.google.com/macros/s/AKfycbx4WuvzB7R3m8RCbiKZwGNm4g713baJuprDFKfWt__m8RyA9x9rjyJPzfTp5sC6qSm2zQ/exec?id=${studentId}`;
+  const historyURL = `${sheetURL}?id=${studentId}`;
   fetch(historyURL)
     .then(r => r.json())
     .then(data => {
