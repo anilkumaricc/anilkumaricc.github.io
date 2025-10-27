@@ -180,25 +180,38 @@ function showSummary() {
 
   // Send to Google Sheet
   const sheetURL = "https://script.google.com/macros/s/AKfycby2ElAenHy59_M3EhRQx0Mf5mijglA-u1bgJhWyDBN2NOXicUpmR3K0C6ZkqWvfQoPIjA/exec";
+  console.log("Sending data to sheet:", studentId); // Debug log
+  // Log data before sending
+  const postData = {
+    name: s.name,
+    father: s.father,
+    roll: s.roll,
+    mobile: s.mobile,
+    series: s.series.replace('Series_', ''),
+    set: s.set,
+    score: finalScore,
+    total: questions.length,
+    percentage: pct,
+    hwDone: s.hwDone,
+    identifier: studentId
+  };
+  console.log("Sending data:", postData);
+
   fetch(sheetURL, {
     method: "POST",
-    body: JSON.stringify({
-      name: s.name,
-      father: s.father,
-      roll: s.roll,
-      mobile: s.mobile,
-      series: s.series.replace('Series_', ''),
-      set: s.set,
-      score: finalScore,
-      total: questions.length,
-      percentage: pct,
-      hwDone: s.hwDone,
-      identifier: studentId
-    }),
-    headers: { "Content-Type": "application/json" }
+    body: JSON.stringify(postData),
+    headers: { 
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    mode: 'cors'
   })
-  .then(response => response.json())
+  .then(response => {
+    console.log("Response status:", response.status);
+    return response.json();
+  })
   .then(result => {
+    console.log("Sheet response:", result);
     if (result.status === "success") {
       alert("✅ आपका परिणाम सफलतापूर्वक Google Sheet में सुरक्षित हो गया है!");
     } else {
@@ -207,6 +220,7 @@ function showSummary() {
   })
   .catch(error => {
     console.error("Google Sheet भेजने में त्रुटि:", error);
+    alert("⚠️ डेटा भेजने में समस्या: " + error.message);
   });
 
   // Fetch past quiz history
