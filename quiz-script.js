@@ -62,11 +62,28 @@ function prepareStudentDataAndStartQuiz() {
   const set = new URLSearchParams(window.location.search).get("set");
   const hwDone = document.getElementById("hwDone").checked;
 
+  // ✅ Pad roll number to 3 digits
   const roll = String(rollRaw).padStart(3, '0');
 
   if (!name || !father || !roll || !series || !set) {
     return alert("सभी जानकारी भरें (नाम, पिता का नाम, रोल नंबर, सीरीज़, और सेट)");
   }
+
+  const studentData = {
+    name, father, mobile, roll, series, set, hwDone
+  };
+  localStorage.setItem('studentData', JSON.stringify(studentData));
+
+  checkPreviousAttempt(series, set, roll).then(result => {
+    if (result.exists) {
+      if (!confirm(result.message + "\n\nक्या आप फिर से हल करना चाहते हैं?")) {
+        window.location.href = "index.html";
+        return;
+      }
+    }
+    loadQuizFiles(set);
+  });
+}
 
   const studentData = {
     name, father, mobile, roll, series, set, hwDone
