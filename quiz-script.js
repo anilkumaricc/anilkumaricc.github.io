@@ -267,7 +267,6 @@ function showSummary() {
   document.getElementById("summaryPanel").style.display = "block";
 
   const s = JSON.parse(localStorage.getItem('studentData') || '{}');
-  // Create identifier from Series + Set + Roll (e.g., "A001085")
   const studentId = makeIdentifier(s.series, s.set, s.roll);
 
   let finalScore = score;
@@ -310,11 +309,10 @@ function showSummary() {
       </div>`;
   });
 
-    document.getElementById("allHomeworkList").innerHTML = allHomework.map(hw => `<li>${hw}</li>`).join('');
+  document.getElementById("allHomeworkList").innerHTML = allHomework.map(hw => `<li>${hw}</li>`).join('');
 
   // Send to Google Sheet
-  console.log("Sending data to sheet:", studentId); // Debug log
-  // Log data before sending it
+  console.log("Sending data to sheet:", studentId);
   const postData = {
     name: s.name,
     father: s.father,
@@ -330,21 +328,18 @@ function showSummary() {
   };
   console.log("Sending data:", postData);
 
-  // Send as application/x-www-form-urlencoded to avoid preflight OPTIONS
   const formBody = new URLSearchParams();
   Object.keys(postData).forEach(k => {
-    // Ensure undefined/null are sent as empty string
     formBody.append(k, postData[k] == null ? '' : String(postData[k]));
   });
 
   fetch(sheetURL, {
     method: "POST",
-    body: formBody // browser will set Content-Type: application/x-www-form-urlencoded; charset=UTF-8
-    // do NOT set custom headers here (avoids preflight)
+    body: formBody
   })
   .then(response => {
     console.log("Response status:", response.status, response.type);
-    return response.text(); // parse as text first for better debugging
+    return response.text();
   })
   .then(text => {
     try {
@@ -365,8 +360,9 @@ function showSummary() {
     alert("⚠️ डेटा भेजने में समस्या: " + (error && error.message ? error.message : error));
   });
 
-  // Fetch past quiz history
-  const historyURL = `${sheetURL}?id=${studentId}`;
+  // ✅ Fetch past quiz history by Roll
+  const rollParam = String(s.roll).padStart(3, '0');
+  const historyURL = `${sheetURL}?roll=${rollParam}`;
   fetch(historyURL)
     .then(r => r.json())
     .then(data => {
@@ -377,7 +373,7 @@ function showSummary() {
       }
 
       let html = `<div class="history-panel">
-        <h3>📘 पिछले क्विज़ का प्रदर्शन</h3>
+        <h3>📘 पिछले क्विज़ का प्रदर्शन (Roll: ${rollParam})</h3>
         <table class="series-table">
           <thead><tr><th>📅 Date</th><th>📚 Series</th><th>🧩 Set</th><th>🎯 Score</th><th>%</th><th>HW</th></tr></thead>
           <tbody>`;
