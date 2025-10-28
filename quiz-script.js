@@ -2,128 +2,106 @@ let questions = [], current = 0, timer = 60, interval, totalTime = 0;
 let userAnswers = [], score = 0, allHomework = [];
 let prevQ = null, prevUser = null, prevCorrect = null, prevExp = null;
 
-const sheetURL = "https://script.google.com/macros/s/AKfycbx4WuvzB7R3m8RCbiKZwGNm4g713baJuprDFKfWt__m8RyA9x9rjyJPzfTp5sC6qSm2zQ/exec";
+document.addEventListener('DOMContentLoaded', function() {
+  loadJSON();
+  document.getElementById("skipBtn").onclick = skipQuestion;
+  document.getElementById("addTime").onclick = addExtraTime;
+  document.getElementById("nextBtn").onclick = nextQuestion;
+});
 
-function makeIdentifier(series, set, roll) {
-  let seriesLetter = '';
-  if (typeof series === 'string') {
-    const m = series.match(/Series_([A-Z])/) || series.match(/^([A-Z])$/);
-    if (m) seriesLetter = m[1];
-  }
-  if (!seriesLetter && typeof set === 'string') {
-    const m2 = set.match(/Series_([A-Z])/);
-    if (m2) seriesLetter = m2[1];
-  }
-  seriesLetter = (seriesLetter || '').toUpperCase();
-
-  let setNumber = '000';
-  if (typeof set === 'string') {
-    const ms = set.match(/Set(\d{3})/);
-    if (ms) setNumber = ms[1];
-  }
-  if (setNumber === '000' && typeof series === 'string') {
-    const ms2 = series.match(/Set(\d{3})/);
-    if (ms2) setNumber = ms2[1];
-  }
-
-  const rollNumber = String(roll || '').padStart(3, '0');
-  return (seriesLetter + setNumber + rollNumber).toUpperCase();
-}
-
+// Check if student has already taken this quiz
 async function checkPreviousAttempt(series, set, roll) {
   try {
-    const identifier = makeIdentifier(series, set, roll);
-    const url = `${sheetURL}?id=${identifier}`;
-    const response = await fetch(url);
-    if (!response.ok) return { exists: false };
+    const seriesLetter = series.replace("Series_", "").charAt(0);
+    const setNumber = set.match(/Set(\d+)/)?.[1] || "000";
+    const rollNumber = roll.padStart(3, "0");
+    const identifier = (seriesLetter + setNumber + rollNumber).toUpperCase();
+    
+    const response = await fetch(`${sheetURL}?id=${identifier}`);
     const data = await response.json();
+    
     if (Array.isArray(data) && data.length > 0) {
-      const latestAttempt = data[data.length - 1];
+      const latestAttempt = data[data.length - 1]; // Get most recent attempt
       const attemptDate = new Date(latestAttempt[0]).toLocaleDateString();
-      const score = latestAttempt[7];
-      const total = latestAttempt[8];
+      const score = latestAttempt[7]; // score column
+      const total = latestAttempt[8]; // total column
       return {
         exists: true,
         message: `आपने यह प्रश्न सेट पहले ही ${attemptDate} को हल कर लिया है। स्कोर: ${score}/${total}`
       };
     }
     return { exists: false };
-  } catch {
-    return { exists: false };
+  } catch (err) {
+    console.error("Check attempt error:", err);
+    return { exists: false }; // Proceed even if check fails
   }
 }
 
-function prepareStudentDataAndStartQuiz() {
-  const name = document.getElementById("name").value.trim();
-  const father = document.getElementById("father").value.trim();
-  const mobile = document.getElementById("mobile").value.trim();
-  const rollRaw = document.getElementById("rollNo").value.trim();
-  const series = document.getElementById("series").value.trim();
-  const set = new URLSearchParams(window.location.search).get("set");
-  const hwDone = document.getElementById("hwDone").checked;
-
-  // ✅ Pad roll number to 3 digits
-  const roll = String(rollRaw).padStart(3, '0');
-
-  if (!name || !father || !roll || !series || !set) {
-    return alert("सभी जानकारी भरें (नाम, पिता का नाम, रोल नंबर, सीरीज़, और सेट)");
+function loadJSON() {
+  const file = new URLSearchParams(window.location.search).get("set");
+  if (!file) return alert("Set file missing!");
+  
+  // Get student data
+  const s = JSON.parse(localStorage.getItem('studentData') || '{}');
+  if (!s.roll || !s.series || !file) {
+    return alert("सभी जानकारी भरें (रोल नंबर, सीरीज़, और सेट)");
   }
 
-  const studentData = {
-    name, father, mobile, roll, series, set, hwDone
-  };
-  localStorage.setItem('studentData', JSON.stringify(studentData));
-
-  checkPreviousAttempt(series, set, roll).then(result => {
+  // First check if already attempted
+  checkPreviousAttempt(s.series, file, s.roll).then(result => {
     if (result.exists) {
       if (!confirm(result.message + "\n\nक्या आप फिर से हल करना चाहते हैं?")) {
         window.location.href = "index.html";
         return;
       }
     }
-    loadQuizFiles(set);
-  });
-}
-
-  const studentData = {
-    name, father, mobile, roll, series, set, hwDone
-  };
-  localStorage.setItem('studentData', JSON.stringify(studentData));
-
-  checkPreviousAttempt(series, set, roll).then(result => {
-    if (result.exists) {
-      if (!confirm(result.message + "\n\nक्या आप फिर से हल करना चाहते हैं?")) {
-        window.location.href = "index.html";
-        return;
-      }
-    }
-    loadQuizFiles(set);
+    // Continue with quiz if new attempt or user confirms retry
+    loadQuizFiles(file);
   });
 }
 
 function loadQuizFiles(file) {
+  console.log("loadQuizFiles called with file:", file);
+
   const match = (file || '').match(/(Series_[A-Z])_Set(\d{3})_WTCA\.json/);
   if (!match) {
     const msg = `Invalid file name or missing 'set' parameter: ${file}`;
+    console.error(msg);
     return document.body.innerHTML = `<h2 style="color:red">${msg}</h2>`;
   }
 
   const series = match[1], setNum = match[2];
   const quizPath = `sets/${file}`;
   const hwPath = `hw/${series}_Set${setNum}_HW.json`;
+  console.log("Attempting to fetch quizPath:", quizPath, "hwPath:", hwPath);
 
   fetch(quizPath)
-    .then(r => r.json())
+    .then(async r => {
+      if (!r.ok) {
+        const txt = await r.text().catch(() => '<<no body>>');
+        return Promise.reject(`Quiz fetch failed: ${quizPath} (status ${r.status}) -> ${txt}`);
+      }
+      try {
+        return r.json();
+      } catch (e) {
+        const txt = await r.text().catch(() => '<<invalid json>>');
+        return Promise.reject(`Quiz JSON parse error for ${quizPath}: ${txt}`);
+      }
+    })
     .then(data => {
       questions = data;
       document.getElementById("totalQuestions").textContent = questions.length;
-      return fetch(hwPath).then(r => r.json()).catch(() => ["No HW"]);
+      return fetch(hwPath).then(async r => {
+        if (!r.ok) return ["No HW"];
+        try { return r.json(); } catch { return ["No HW"]; }
+      });
     })
     .then(hw => {
       allHomework = Array.isArray(hw) ? hw : [hw];
       startQuiz();
     })
     .catch(err => {
+      console.error(err);
       document.body.innerHTML = `<h2 style="color:red">${String(err)}</h2>`;
     });
 }
@@ -139,24 +117,56 @@ function startQuiz() {
 }
 
 function showQuestion() {
+  console.log("showQuestion() called. current:", current, "questions.length:", questions.length);
+  if (!Array.isArray(questions) || questions.length === 0) {
+    const msg = "कोई प्रश्न उपलब्ध नहीं हैं (questions array खाली है)";
+    console.error(msg, { questions });
+    document.getElementById("questionArea").innerHTML = `<p style=\"color:red;\">${msg}</p>`;
+    document.getElementById("optionsArea").innerHTML = '';
+    return;
+  }
+
   if (current >= questions.length) return showSummary();
+
   const q = questions[current];
+  console.log("Rendering question:", q);
   document.getElementById("questionNumber").textContent = current + 1;
   document.getElementById("questionArea").innerHTML = `<p><strong>${q.question}</strong></p>`;
+
   const opts = document.getElementById("optionsArea");
   opts.innerHTML = "";
-  q.options.forEach((opt, i) => {
-    const btn = document.createElement("button");
-    btn.className = "option-btn";
-    btn.textContent = opt;
-    btn.onclick = () => selectOption(i);
-    opts.appendChild(btn);
-  });
+  if (!q || !Array.isArray(q.options) || q.options.length === 0) {
+    const msg = "प्रश्न में विकल्प उपलब्ध नहीं हैं। JSON में 'options' फील्ड चेक करें।";
+    console.error(msg, { q });
+    opts.innerHTML = `<p style=\"color:red;\">${msg}</p>`;
+  } else {
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.textContent = opt;
+      btn.onclick = () => selectOption(i);
+      opts.appendChild(btn);
+    });
+  }
+
   document.getElementById("nextBtn").style.display = "none";
   document.getElementById("skipBtn").style.display = "inline-block";
   document.getElementById("answerDisplay").style.display = "none";
-  document.getElementById("homeworkList").innerHTML = allHomework.map(hw => `<li>${hw}</li>`).join('');
+
+  if (current > 0 && prevQ) {
+    document.getElementById("previousQ").style.display = "block";
+    document.getElementById("previousQuestion").textContent = prevQ;
+    document.getElementById("previousUserAnswer").innerHTML = `<strong>आपका:</strong> ${prevUser}`;
+    document.getElementById("previousCorrectAnswer").innerHTML = `<strong>सही:</strong> ${prevCorrect}`;
+    document.getElementById("previousExplanation").innerHTML = `<strong>विवरण:</strong> ${prevExp}`;
+  } else {
+    document.getElementById("previousQ").style.display = "none";
+  }
+
+  const hwList = document.getElementById("homeworkList");
+  hwList.innerHTML = allHomework.map(hw => `<li>${hw}</li>`).join('');
   document.getElementById("homeworkBox").style.display = "block";
+
   timer = 60;
 }
 
@@ -165,16 +175,21 @@ function selectOption(i) {
   const q = questions[current];
   const correct = q.answer[0];
   const isCorrect = i === correct;
+
   document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
   document.querySelectorAll('.option-btn')[i].classList.add(isCorrect ? 'correct' : 'incorrect');
   if (!isCorrect) document.querySelectorAll('.option-btn')[correct].classList.add('correct');
+
   if (isCorrect) score++;
+
   document.getElementById("userAnswer").innerHTML = `<strong>आपका उत्तर:</strong> ${q.options[i]}`;
   document.getElementById("correctAnswer").innerHTML = `<strong>सही उत्तर:</strong> ${q.options[correct]}`;
   document.getElementById("explanationText").innerHTML = `<strong>विवरण:</strong> ${q.explanation || 'N/A'}`;
   document.getElementById("answerDisplay").style.display = "block";
+
   document.getElementById("nextBtn").style.display = "inline-block";
   document.getElementById("skipBtn").style.display = "none";
+
   prevQ = q.question;
   prevUser = q.options[i];
   prevCorrect = q.options[correct];
@@ -200,13 +215,18 @@ function nextQuestion() {
 function addExtraTime() {
   timer += 60;
 }
+
 function showSummary() {
   clearInterval(interval);
   document.getElementById("mainPanel").style.display = "none";
   document.getElementById("summaryPanel").style.display = "block";
 
   const s = JSON.parse(localStorage.getItem('studentData') || '{}');
-  const studentId = makeIdentifier(s.series, s.set, s.roll);
+  // Create identifier from Series + Set + Roll (e.g., "A001085")
+  const seriesLetter = (s.series || "").replace("Series_", "").charAt(0);
+  const setNumber = (s.set || "").match(/Set(\d+)/)?.[1] || "000";
+  const rollNumber = (s.roll || "").padStart(3, "0");
+  const studentId = (seriesLetter + setNumber + rollNumber).toUpperCase();
 
   let finalScore = score;
   if (!s.hwDone) finalScore -= 10;
@@ -248,9 +268,12 @@ function showSummary() {
       </div>`;
   });
 
-  document.getElementById("allHomeworkList").innerHTML = allHomework.map(hw => `<li>${hw}</li>`).join('');
+    document.getElementById("allHomeworkList").innerHTML = allHomework.map(hw => `<li>${hw}</li>`).join('');
 
-  // ✅ Send result to Google Sheet
+  // Send to Google Sheet
+  const sheetURL = "https://script.google.com/macros/s/AKfycbx4WuvzB7R3m8RCbiKZwGNm4g713baJuprDFKfWt__m8RyA9x9rjyJPzfTp5sC6qSm2zQ/exec";
+  console.log("Sending data to sheet:", studentId); // Debug log
+  // Log data before sending it
   const postData = {
     name: s.name,
     father: s.father,
@@ -264,28 +287,36 @@ function showSummary() {
     hwDone: s.hwDone,
     identifier: studentId
   };
+  console.log("Sending data:", postData);
 
+  // Send as application/x-www-form-urlencoded to avoid preflight OPTIONS
   const formBody = new URLSearchParams();
   Object.keys(postData).forEach(k => {
+    // Ensure undefined/null are sent as empty string
     formBody.append(k, postData[k] == null ? '' : String(postData[k]));
   });
 
   fetch(sheetURL, {
     method: "POST",
-    body: formBody
+    body: formBody // browser will set Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    // do NOT set custom headers here (avoids preflight)
   })
-  .then(response => response.text())
+  .then(response => {
+    console.log("Response status:", response.status, response.type);
+    return response.text(); // parse as text first for better debugging
+  })
   .then(text => {
     try {
       const result = JSON.parse(text);
+      console.log("Sheet response:", result);
       if (result.status === "success") {
         alert("✅ आपका परिणाम सफलतापूर्वक Google Sheet में सुरक्षित हो गया है!");
       } else {
         alert("⚠️ परिणाम सुरक्षित नहीं हो पाया: " + (result.message || text));
       }
     } catch (err) {
+      console.log("Non-JSON response from sheet:", text);
       alert("⚠️ सर्वर से अप्रत्याशित प्रतिक्रिया मिली: देखिए कंसोल");
-      console.log("Raw response:", text);
     }
   })
   .catch(error => {
@@ -293,9 +324,8 @@ function showSummary() {
     alert("⚠️ डेटा भेजने में समस्या: " + (error && error.message ? error.message : error));
   });
 
-  // ✅ Fetch past quiz history by Roll
-  const rollParam = String(s.roll).padStart(3, '0');
-  const historyURL = `${sheetURL}?roll=${rollParam}`;
+  // Fetch past quiz history
+  const historyURL = `https://script.google.com/macros/s/AKfycbx4WuvzB7R3m8RCbiKZwGNm4g713baJuprDFKfWt__m8RyA9x9rjyJPzfTp5sC6qSm2zQ/exec?id=${studentId}`;
   fetch(historyURL)
     .then(r => r.json())
     .then(data => {
@@ -306,7 +336,7 @@ function showSummary() {
       }
 
       let html = `<div class="history-panel">
-        <h3>📘 पिछले क्विज़ का प्रदर्शन (Roll: ${rollParam})</h3>
+        <h3>📘 पिछले क्विज़ का प्रदर्शन</h3>
         <table class="series-table">
           <thead><tr><th>📅 Date</th><th>📚 Series</th><th>🧩 Set</th><th>🎯 Score</th><th>%</th><th>HW</th></tr></thead>
           <tbody>`;
@@ -327,3 +357,4 @@ function showSummary() {
       document.getElementById("studentHistory").innerHTML = "<p style='color:red;'>डेटा लोड करने में त्रुटि!</p>";
     });
 }
+
