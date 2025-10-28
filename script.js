@@ -28,7 +28,7 @@ document.getElementById('seriesSelect').addEventListener('change', function () {
 });
 
 // Start Quiz Button Logic
-document.getElementById('startQuiz').addEventListener('click', function () {
+document.getElementById('startQuiz').addEventListener('click', async function () {
   const name = document.getElementById('studentName').value.trim();
   const father = document.getElementById('fatherName').value.trim();
   const roll = document.getElementById('rollNo').value.trim();
@@ -115,19 +115,35 @@ document.getElementById('startQuiz').addEventListener('click', function () {
   }
   const studentId = makeIdentifier(series, set, roll);
 
-  // Prevent duplicate quiz attempt - check both old and new formats
-  const newExamKey = `${studentId}_${series}_${set}`;
-  const oldExamKey = `anilsudama${roll}_${series}_${set}`;
-  
-  if (localStorage.getItem(newExamKey) || localStorage.getItem(oldExamKey)) {
-    alert('आप पहले ही यह क्विज़ दे चुके हैं!');
+  // Verify duplicate attempts on server-side (instead of localStorage)
+  // Replace VERIFY_URL with your Google Apps Script or server endpoint that checks history
+  const VERIFY_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // <-- change this
+
+  try {
+    const params = new URLSearchParams({
+      identifier: studentId,
+      oldIdentifier: `anilsudama${roll}`,
+      series,
+      set
+    });
+    const resp = await fetch(`${VERIFY_URL}?${params.toString()}`, { method: 'GET', cache: 'no-cache' });
+    if (!resp.ok) throw new Error(`Verify request failed: ${resp.status}`);
+    const data = await resp.json();
+    // Expected server response: { alreadyAttempted: boolean, message?: string }
+    if (data && data.alreadyAttempted) {
+      alert(data.message || 'आप पहले ही यह क्विज़ दे चुके हैं!');
+      return;
+    }
+  } catch (err) {
+    console.error('Server verification failed', err);
+    alert('सत्यापन में समस्या हुई — कृपया नेटवर्क जांचें या बाद में पुनः प्रयास करें।');
     return;
   }
 
   // Save student data
   const studentData = { name, father, roll, mobile, series, set, hwDone, studentId };
+  // keep a local copy of the student's form data but do NOT use it for duplicate-checking
   localStorage.setItem('studentData', JSON.stringify(studentData));
-  localStorage.setItem(examKey, 'completed');
 
   // Redirect to quiz page
   window.location.href = `quiz.html?set=${series}_${set}_WTCA.json`;
