@@ -115,9 +115,11 @@ document.getElementById('startQuiz').addEventListener('click', function () {
   }
   const studentId = makeIdentifier(series, set, roll);
 
-  // Prevent duplicate quiz attempt
-  const examKey = `${studentId}_${series}_${set}`;
-  if (localStorage.getItem(examKey)) {
+  // Prevent duplicate quiz attempt - check both old and new formats
+  const newExamKey = `${studentId}_${series}_${set}`;
+  const oldExamKey = `anilsudama${roll}_${series}_${set}`;
+  
+  if (localStorage.getItem(newExamKey) || localStorage.getItem(oldExamKey)) {
     alert('आप पहले ही यह क्विज़ दे चुके हैं!');
     return;
   }
