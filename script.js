@@ -28,7 +28,7 @@ document.getElementById('seriesSelect').addEventListener('change', function () {
 });
 
 // Start Quiz Button Logic
-document.getElementById('startQuiz').addEventListener('click', async function () {
+document.getElementById('startQuiz').addEventListener('click', function () {
   const name = document.getElementById('studentName').value.trim();
   const father = document.getElementById('fatherName').value.trim();
   const roll = document.getElementById('rollNo').value.trim();
@@ -89,62 +89,24 @@ document.getElementById('startQuiz').addEventListener('click', async function ()
     return;
   }
 
-  // Generate identifier in new format: SeriesLetter + SetNumber + RollNumber (e.g., A001085)
-  function makeIdentifier(series, set, roll) {
-    let seriesLetter = '';
-    if (typeof series === 'string') {
-      const m = series.match(/Series_([A-Z])/) || series.match(/^([A-Z])$/);
-      if (m) seriesLetter = m[1];
-    }
-    if (!seriesLetter && typeof set === 'string') {
-      const m2 = set.match(/Series_([A-Z])/);
-      if (m2) seriesLetter = m2[1];
-    }
-    seriesLetter = (seriesLetter || '').toUpperCase();
-    let setNumber = '000';
-    if (typeof set === 'string') {
-      const ms = set.match(/Set(\d{3})/);
-      if (ms) setNumber = ms[1];
-    }
-    if (setNumber === '000' && typeof series === 'string') {
-      const ms2 = series.match(/Set(\d{3})/);
-      if (ms2) setNumber = ms2[1];
-    }
-    const rollNumber = String(roll || '').padStart(3, '0');
-    return (seriesLetter + setNumber + rollNumber).toUpperCase();
-  }
-  const studentId = makeIdentifier(series, set, roll);
+  // Generate unique student ID
+  const nameId = name.replace(/\s+/g, '').slice(0, 3).toUpperCase();
+  const fatherId = father.replace(/\s+/g, '').slice(0, 3).toUpperCase();
+  const studentId = nameId + fatherId + roll;
 
-  // Verify duplicate attempts on server-side (instead of localStorage)
-  // Replace VERIFY_URL with your Google Apps Script or server endpoint that checks history
-  const VERIFY_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // <-- change this
-
-  try {
-    const params = new URLSearchParams({
-      identifier: studentId,
-      oldIdentifier: `anilsudama${roll}`,
-      series,
-      set
-    });
-    const resp = await fetch(`${VERIFY_URL}?${params.toString()}`, { method: 'GET', cache: 'no-cache' });
-    if (!resp.ok) throw new Error(`Verify request failed: ${resp.status}`);
-    const data = await resp.json();
-    // Expected server response: { alreadyAttempted: boolean, message?: string }
-    if (data && data.alreadyAttempted) {
-      alert(data.message || 'आप पहले ही यह क्विज़ दे चुके हैं!');
-      return;
-    }
-  } catch (err) {
-    console.error('Server verification failed', err);
-    alert('सत्यापन में समस्या हुई — कृपया नेटवर्क जांचें या बाद में पुनः प्रयास करें।');
+  // Prevent duplicate quiz attempt
+  const examKey = `${studentId}_${series}_${set}`;
+  if (localStorage.getItem(examKey)) {
+    alert('आप पहले ही यह क्विज़ दे चुके हैं!');
     return;
   }
 
   // Save student data
   const studentData = { name, father, roll, mobile, series, set, hwDone, studentId };
-  // keep a local copy of the student's form data but do NOT use it for duplicate-checking
   localStorage.setItem('studentData', JSON.stringify(studentData));
+  localStorage.setItem(examKey, 'completed');
 
   // Redirect to quiz page
   window.location.href = `quiz.html?set=${series}_${set}_WTCA.json`;
+
 });
