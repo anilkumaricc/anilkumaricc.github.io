@@ -1,14 +1,122 @@
 [
   {
-    "question": "कंप्यूटर का पूरा नाम क्या है?",
-    "options": ["Common Operating Machine", "Commonly Operated Machine", "Common Operating Machine Particularly Used for Technical and Educational Research", "None"],
-    "answer": [2],
-    "explanation": "कंप्यूटर का पूरा नाम: <strong>Common Operating Machine Particularly Used for Technical and Educational Research</strong>"
+    "question": "कंप्यूटर की पहली पीढ़ी में किस तकनीक का उपयोग हुआ था?",
+    "options": ["ट्रांजिस्टर", "वैक्यूम ट्यूब", "इंटीग्रेटेड सर्किट", "माइक्रोप्रोसेसर"],
+    "answer": [1],
+    "explanation": "पहली पीढ़ी (1940-1956) में <strong>वैक्यूम ट्यूब</strong> का उपयोग हुआ था।"
   },
   {
-    "question": "CPU का मुख्य कार्य क्या है?",
-    "options": ["डेटा स्टोर करना", "प्रोग्राम चलाना", "प्रिंट करना", "स्कैन करना"],
+    "question": "किसी कंप्यूटर में डेटा को स्थायी रूप से स्टोर करने के लिए कौन सी मेमोरी उपयोगी है?",
+    "options": ["RAM", "ROM", "Cache", "Register"],
     "answer": [1],
-    "explanation": "CPU प्रोग्राम के निर्देशों को चलाता है।"
+    "explanation": "<strong>ROM</strong> में डेटा स्थायी रूप से रहता है।"
+  },
+  {
+    "question": "ALU का मुख्य कार्य क्या है?",
+    "options": ["डेटा स्टोर करना", "गणना और तार्किक ऑपरेशन करना", "इनपुट लेना", "आउटपुट देना"],
+    "answer": [1],
+    "explanation": "<strong>ALU</strong> अंकगणितीय और तार्किक गणनाएँ करता है।"
+  },
+  {
+    "question": "1 KB में कितने बाइट्स होते हैं?",
+    "options": ["1000", "1024", "256", "512"],
+    "answer": [1],
+    "explanation": "1 KB = <strong>1024 बाइट्स</strong>"
+  },
+  {
+    "question": "कौन सी डिवाइस इनपुट और आउटपुट दोनों के लिए उपयोग होती है?",
+    "options": ["मॉनिटर", "टच स्क्रीन", "प्रिंटर", "कीबोर्ड"],
+    "answer": [1],
+    "explanation": "<strong>टच स्क्रीन</strong> इनपुट और आउटपुट दोनों के लिए है।"
+  },
+  {
+    "question": "MICR तकनीक का मुख्य उपयोग कहाँ होता है?",
+    "options": ["बारकोड पढ़ने में", "चेक पढ़ने में", "फोटो स्कैन करने में", "आवाज़ पहचानने में"],
+    "answer": [1],
+    "explanation": "<strong>MICR</strong> बैंक चेक पढ़ने के लिए उपयोग होता है।"
+  },
+  {
+    "question": "कंप्यूटर की गति को मापने की इकाई है:",
+    "options": ["Hz", "MHz", "GHz", "सभी"],
+    "answer": [3],
+    "explanation": "CPU की गति <strong>GHz</strong> में मापी जाती है।"
+  },
+  {
+    "question": "Cache Memory CPU और RAM के बीच स्थित होती है।",
+    "options": ["सही", "गलत"],
+    "answer": [0],
+    "explanation": "<strong>सही</strong> – यह गति बढ़ाने के लिए होती है।"
+  },
+  {
+    "question": "RAM में डेटा __________ रहता है।",
+    "type": "fill",
+    "answer": "अस्थायी",
+    "explanation": "RAM में डेटा <strong>अस्थायी</strong> होता है – बिजली जाने पर मिट जाता है।"
+  },
+  {
+    "question": "कंप्यूटर की दूसरी पीढ़ी में __________ का उपयोग हुआ।",
+    "type": "fill",
+    "answer": "ट्रांजिस्टर",
+    "explanation": "दूसरी पीढ़ी (1956-1963) में <strong>ट्रांजिस्टर</strong> का उपयोग हुआ।"
+  },
+  {
+    "question": "CPU के तीन मुख्य भाग कौन से हैं?",
+    "type": "short",
+    "answer": "ALU, CU, Register",
+    "explanation": "CPU में <strong>ALU, Control Unit, Register</strong> होते हैं।"
+  },
+  {
+    "question": "हार्ड डिस्क एक __________ स्टोरेज डिवाइस है।",
+    "type": "short",
+    "answer": "Secondary",
+    "explanation": "<strong>Secondary Storage</strong> – RAM की तुलना में धीमी लेकिन स्थायी।"
+  },
+  {
+    "question": "कीबोर्ड और माउस में क्या अंतर है?",
+    "type": "diff",
+    "answer": "कीबोर्ड टेक्स्ट इनपुट के लिए, माउस पॉइंटिंग के लिए।",
+    "explanation": "<strong>कीबोर्ड</strong> अक्षर डालता है, <strong>माउस</strong> कर्सर मूव करता है।"
+  },
+  {
+    "question": "SSD और HDD में एक अंतर बताइए।",
+    "type": "diff",
+    "answer": "SSD में कोई मूविंग पार्ट नहीं, HDD में होता है।",
+    "explanation": "<strong>SSD</strong> तेज़ और टिकाऊ, <strong>HDD</strong> सस्ता लेकिन धीमा।"
+  },
+  {
+    "question": "कंप्यूटर के चार मुख्य भाग लिखिए।",
+    "type": "list",
+    "answer": "Input, CPU, Memory, Output",
+    "explanation": "<strong>Input → CPU → Memory → Output</strong>"
+  },
+  {
+    "question": "CPU का पूरा नाम क्या है?",
+    "type": "fullform",
+    "answer": "Central Processing Unit",
+    "explanation": "<strong>Central Processing Unit</strong> – कंप्यूटर का मस्तिष्क।"
+  },
+  {
+    "question": "ALU का पूरा नाम क्या है?",
+    "type": "fullform",
+    "answer": "Arithmetic Logic Unit",
+    "explanation": "<strong>Arithmetic Logic Unit</strong> – गणना और तर्क के लिए।"
+  },
+  {
+    "question": "कंप्यूटर की तीसरी पीढ़ी में IC का उपयोग हुआ था।",
+    "options": ["सही", "गलत"],
+    "answer": [0],
+    "explanation": "<strong>सही</strong> – तीसरी पीढ़ी (1964-1971) में IC आया।"
+  },
+  {
+    "question": "OMR का उपयोग मुख्य रूप से __________ में होता है।",
+    "type": "short",
+    "answer": "प्रश्नपत्र जाँच",
+    "explanation": "<strong>OMR</strong> ऑब्जेक्टिव उत्तरपत्र जाँचने के लिए।"
+  },
+  {
+    "question": "प्रिंटर एक __________ डिवाइस है।",
+    "type": "fill",
+    "answer": "आउटपुट",
+    "explanation": "<strong>आउटपुट डिवाइस</strong> – कागज पर प्रिंट करता है।"
   }
 ]
