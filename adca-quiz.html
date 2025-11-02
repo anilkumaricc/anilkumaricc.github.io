@@ -38,26 +38,11 @@
     <p>CENTRE FOR COMPUTER TRAINING & SERVICES</p>
 
     <div id="loginForm">
-      <div class="form-group">
-        <label>Password *</label>
-        <input type="password" id="password" placeholder="Enter password" required>
-      </div>
-      <div class="form-group">
-        <label>Roll Number *</label>
-        <input type="text" id="roll" placeholder="001" required>
-      </div>
-      <div class="form-group">
-        <label>Name *</label>
-        <input type="text" id="name" placeholder="Full name" required>
-      </div>
-      <div class="form-group">
-        <label>Father's Name *</label>
-        <input type="text" id="father" placeholder="Father's name" required>
-      </div>
-      <div class="form-group">
-        <label>Mobile *</label>
-        <input type="tel" id="mobile" placeholder="10-digit number" pattern="[0-9]{10}" required>
-      </div>
+      <div class="form-group"><label>Password *</label><input type="password" id="password" placeholder="Enter password" required></div>
+      <div class="form-group"><label>Roll Number *</label><input type="text" id="roll" placeholder="001" required></div>
+      <div class="form-group"><label>Name *</label><input type="text" id="name" placeholder="Full name" required></div>
+      <div class="form-group"><label>Father's Name *</label><input type="text" id="father" placeholder="Father's name" required></div>
+      <div class="form-group"><label>Mobile *</label><input type="tel" id="mobile" placeholder="10-digit number" pattern="[0-9]{10}" required></div>
       <div class="form-group">
         <label>Series *</label>
         <select id="series" required>
@@ -74,21 +59,12 @@
           <option value="J">J - Programming Basics</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Set *</label>
-        <select id="set" required>
-          <option value="">-- Select --</option>
-          <!-- JS will fill 001-250 -->
-        </select>
-      </div>
+      <div class="form-group"><label>Set *</label><select id="set" required><option value="">-- Select --</option></select></div>
       <button class="btn" onclick="startQuiz()">🚀 Start Quiz</button>
     </div>
 
     <div id="quizArea" class="hidden">
-      <div class="timer">
-        <span>⏱️ Time: <strong id="timer">00:00</strong></span>
-        <span>Q <span id="qno">-</span> / <span id="totalQ">-</span></span>
-      </div>
+      <div class="timer"><span>⏱️ Time: <strong id="timer">00:00</strong></span><span>Q <span id="qno">-</span> / <span id="totalQ">-</span></span></div>
       <div class="question" id="question"></div>
       <div class="options" id="options"></div>
       <div style="display:flex;gap:10px;margin-top:20px;">
@@ -99,10 +75,7 @@
     </div>
 
     <div id="resultArea" class="hidden">
-      <div class="result-card">
-        <h2>📊 Your Result</h2>
-        <p><strong>Name:</strong> <span id="resName"></span></p>
-      </div>
+      <div class="result-card"><h2>📊 Your Result</h2><p><strong>Name:</strong> <span id="resName"></span></p></div>
       <div class="grid">
         <div><strong id="resCorrect">0</strong><span>Correct</span></div>
         <div><strong id="resAttempted">0</strong><span>Attempted</span></div>
@@ -118,7 +91,7 @@
 
   <script>
     const PASS = '2004';
-    let questions=[],curr=0,score=0,attempted=0,timerSec=0,interval,startTime,userAns={};
+    let questions=[],curr=0,score=0,attempted=0,timerSec=0,interval,startTime,userAns=[];
 
     // Fill sets 001-250
     for(let i=1;i<=250;i++){
@@ -139,7 +112,6 @@
     }
 
     function loadQuestions(){
-      // Fetch from GitHub
       const series=document.getElementById('series').value;
       const set=document.getElementById('set').value;
       const filePath=`https://anilkumaricc.github.io/hw/Series_${series}_${set}_HW.json`;
@@ -178,7 +150,6 @@
     }
 
     function selectAns(idx){userAns[curr]=idx;showQ();}
-
     function nextQ(){if(curr<questions.length-1){curr++;showQ();}}
     function prevQ(){if(curr>0){curr--;showQ();}}
 
@@ -213,9 +184,9 @@
 
     function saveToSheet(){
       const btn=event.target;btn.disabled=true;btn.textContent='Saving...';
-      fetch('https://script.google.com/macros/s/AKfycbwcA_ql7r7XGCb5I-Hu8G8j_8N2rcr8EfzUQFIqifoc9MeT6GQeRRxXrt5L3G-q_xw/exec',{
+      const GAS_URL='https://script.google.com/macros/s/AKfycbwcA_ql7r7XGCb5I-Hu8G8j_8N2rcr8EfzUQFIqifoc9MeT6GQeRRxXrt5L3G-q_xw/exec';
+      fetch(GAS_URL,{
         method:'POST',
-        headers:{'Content-Type':'text/plain'},
         body:JSON.stringify(window.payloadData)
       })
       .then(r=>r.json())
