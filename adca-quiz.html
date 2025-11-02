@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ADCA Daily Quiz</title>
+  <style>
+    :root{--grad:linear-gradient(135deg,#667eea 0%,#764ba2 100%);}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif;}
+    body{background:var(--grad);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+    .card{background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:500px;width:100%;padding:40px;}
+    h1{color:#667eea;text-align:center;margin-bottom:10px;}
+    p{color:#666;text-align:center;font-size:14px;margin-bottom:25px;}
+    .form-group{margin-bottom:20px;}
+    label{display:block;margin-bottom:6px;font-weight:600;color:#333;}
+    input,select{width:100%;padding:12px 15px;border:2px solid #e0e0e0;border-radius:10px;font-size:16px;transition:.3s;}
+    input:focus,select:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,.2);}
+    .btn{width:100%;padding:15px;background:var(--grad);color:#fff;border:none;border-radius:10px;font-size:18px;font-weight:600;cursor:pointer;transition:.3s;}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(102,126,234,.4);}
+    .hidden{display:none;}
+    #quizArea,#resultArea{margin-top:20px;}
+    .timer{display:flex;justify-content:space-between;align-items:center;background:#f8f9fa;padding:10px 15px;border-radius:10px;margin-bottom:20px;}
+    .question{font-size:18px;margin-bottom:15px;color:#222;}
+    .options{display:flex;flex-direction:column;gap:10px;}
+    .option{background:#f1f5f9;border:2px solid #e0e0e0;border-radius:10px;padding:12px 15px;cursor:pointer;transition:.3s;}
+    .option:hover{border-color:#667eea;background:#e3f2fd;}
+    .option.selected{border-color:#667eea;background:#e3f2fd;font-weight:600;}
+    .result-card{background:#f8f9fa;padding:20px;border-radius:15px;text-align:center;margin-bottom:20px;}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-bottom:20px;}
+    .grid div{background:#fff;padding:15px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+    .grid div strong{display:block;font-size:24px;color:#333;}
+    .grid div span{font-size:14px;color:#666;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎓 ADCA Daily Quiz</h1>
+    <p>CENTRE FOR COMPUTER TRAINING & SERVICES</p>
+
+    <div id="loginForm">
+      <div class="form-group">
+        <label>Password *</label>
+        <input type="password" id="password" placeholder="Enter password" required>
+      </div>
+      <div class="form-group">
+        <label>Roll Number *</label>
+        <input type="text" id="roll" placeholder="001" required>
+      </div>
+      <div class="form-group">
+        <label>Name *</label>
+        <input type="text" id="name" placeholder="Full name" required>
+      </div>
+      <div class="form-group">
+        <label>Father's Name *</label>
+        <input type="text" id="father" placeholder="Father's name" required>
+      </div>
+      <div class="form-group">
+        <label>Mobile *</label>
+        <input type="tel" id="mobile" placeholder="10-digit number" pattern="[0-9]{10}" required>
+      </div>
+      <div class="form-group">
+        <label>Series *</label>
+        <select id="series" required>
+          <option value="">-- Select --</option>
+          <option value="A">A - Computer Fundamentals</option>
+          <option value="B">B - Operating System</option>
+          <option value="C">C - MS Word</option>
+          <option value="D">D - MS Excel</option>
+          <option value="E">E - MS PowerPoint</option>
+          <option value="F">F - Internet & Email</option>
+          <option value="G">G - Networking Basics</option>
+          <option value="H">H - HTML Basics</option>
+          <option value="I">I - Database Concepts</option>
+          <option value="J">J - Programming Basics</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Set *</label>
+        <select id="set" required>
+          <option value="">-- Select --</option>
+          <!-- JS will fill 001-250 -->
+        </select>
+      </div>
+      <button class="btn" onclick="startQuiz()">🚀 Start Quiz</button>
+    </div>
+
+    <div id="quizArea" class="hidden">
+      <div class="timer">
+        <span>⏱️ Time: <strong id="timer">00:00</strong></span>
+        <span>Q <span id="qno">-</span> / <span id="totalQ">-</span></span>
+      </div>
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button class="btn" id="prevBtn" onclick="prevQ()" style="flex:1;">◀ Previous</button>
+        <button class="btn" id="nextBtn" onclick="nextQ()" style="flex:1;" disabled>Next ▶</button>
+        <button class="btn" id="submitBtn" onclick="submitQuiz()" style="flex:1;display:none;">✅ Submit</button>
+      </div>
+    </div>
+
+    <div id="resultArea" class="hidden">
+      <div class="result-card">
+        <h2>📊 Your Result</h2>
+        <p><strong>Name:</strong> <span id="resName"></span></p>
+      </div>
+      <div class="grid">
+        <div><strong id="resCorrect">0</strong><span>Correct</span></div>
+        <div><strong id="resAttempted">0</strong><span>Attempted</span></div>
+        <div><strong id="resTotal">0</strong><span>Total</span></div>
+        <div><strong id="resPercent">0</strong><span>%</span></div>
+      </div>
+      <div style="text-align:center;margin-top:20px;">
+        <button class="btn" onclick="saveToSheet()">📤 Submit & Save</button>
+        <p id="statusMsg"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PASS = '2004';
+    let questions=[],curr=0,score=0,attempted=0,timerSec=0,interval,startTime,userAns={};
+
+    // Fill sets 001-250
+    for(let i=1;i<=250;i++){
+      const opt=document.createElement('option');
+      opt.value=`Set${String(i).padStart(3,'0')}`;
+      opt.textContent=`Set ${String(i).padStart(3,'0')}`;
+      document.getElementById('set').appendChild(opt);
+    }
+
+    function startQuiz(){
+      if(document.getElementById('password').value!==PASS){alert('❌ Wrong password');return;}
+      const name=document.getElementById('name').value.trim();
+      if(!name){alert('Name required');return;}
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('quizArea').classList.remove('hidden');
+      startTime=Date.now();
+      loadQuestions();
+    }
+
+    function loadQuestions(){
+      // Fetch from GitHub
+      const series=document.getElementById('series').value;
+      const set=document.getElementById('set').value;
+      const filePath=`https://anilkumaricc.github.io/hw/Series_${series}_${set}_HW.json`;
+      fetch(filePath)
+        .then(r=>r.json())
+        .then(data=>{
+          questions=data.questions.map(q=>{
+            q.options=shuffle(q.options);
+            q.correct=q.options.indexOf(q.options[q.correct]);
+            return q;
+          });
+          userAns=new Array(questions.length).fill(null);
+          timerSec=0;clearInterval(interval);
+          interval=setInterval(()=>{timerSec++;document.getElementById('timer').textContent=formatTime(timerSec);},1000);
+          showQ();
+        })
+        .catch(()=>alert('❌ Questions not found!'));
+    }
+
+    function showQ(){
+      const q=questions[curr];
+      document.getElementById('qno').textContent=curr+1;
+      document.getElementById('totalQ').textContent=questions.length;
+      document.getElementById('question').textContent=`Q${curr+1}. ${q.question}`;
+      const opts=document.getElementById('options');opts.innerHTML='';
+      q.options.forEach((o,i)=>{
+        const div=document.createElement('div');div.className='option';div.textContent=o;
+        if(userAns[curr]===i)div.classList.add('selected');
+        div.onclick=()=>selectAns(i);
+        opts.appendChild(div);
+      });
+      document.getElementById('prevBtn').style.display=curr===0?'none':'block';
+      document.getElementById('nextBtn').style.display=curr===questions.length-1?'none':'block';
+      document.getElementById('submitBtn').style.display=curr===questions.length-1?'block':'none';
+      document.getElementById('nextBtn').disabled=userAns[curr]===null;
+    }
+
+    function selectAns(idx){userAns[curr]=idx;showQ();}
+
+    function nextQ(){if(curr<questions.length-1){curr++;showQ();}}
+    function prevQ(){if(curr>0){curr--;showQ();}}
+
+    function submitQuiz(){
+      clearInterval(interval);
+      attempted=userAns.filter(a=>a!==null).length;
+      score=userAns.filter((a,i)=>a===questions[i].correct).length;
+      const perc=((score/questions.length)*100).toFixed(2);
+      document.getElementById('quizArea').classList.add('hidden');
+      document.getElementById('resultArea').classList.remove('hidden');
+      document.getElementById('resName').textContent=document.getElementById('name').value;
+      document.getElementById('resCorrect').textContent=score;
+      document.getElementById('resAttempted').textContent=attempted;
+      document.getElementById('resTotal').textContent=questions.length;
+      document.getElementById('resPercent').textContent=perc;
+      window.payloadData={
+        roll:document.getElementById('roll').value,
+        name:document.getElementById('name').value,
+        father:document.getElementById('father').value,
+        mobile:document.getElementById('mobile').value,
+        series:document.getElementById('series').value,
+        set:document.getElementById('set').value,
+        attempted:attempted,
+        correct:score,
+        total:questions.length,
+        percentage:perc,
+        timeTaken:timerSec,
+        hwDone:'Yes',
+        identifier:Date.now().toString()
+      };
+    }
+
+    function saveToSheet(){
+      const btn=event.target;btn.disabled=true;btn.textContent='Saving...';
+      fetch('https://script.google.com/macros/s/AKfycbwcA_ql7r7XGCb5I-Hu8G8j_8N2rcr8EfzUQFIqifoc9MeT6GQeRRxXrt5L3G-q_xw/exec',{
+        method:'POST',
+        headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify(window.payloadData)
+      })
+      .then(r=>r.json())
+      .then(res=>{btn.textContent='✅ Saved';document.getElementById('statusMsg').textContent='डेटा Google Sheet में सेव हो गया!';})
+      .catch(()=>{btn.disabled=false;btn.textContent='Retry';document.getElementById('statusMsg').textContent='इंटरनेट नहीं – पुनः प्रयास करें';});
+    }
+
+    function shuffle(arr){return arr.sort(()=>Math.random()-0.5);}
+    function formatTime(s){const m=Math.floor(s/60);const sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');}
+  </script>
+</body>
+</html>
