@@ -1,20 +1,18 @@
-<!-- config.js (GitHub) -->
-<script>
-  window.ADCA = {
-    // === Apps Script Web App (BOUND) ===
-    ENDPOINT: "https://script.google.com/macros/s/AKfycbxqn_SJ6bEU1n2wHwfyWQ8a2WFKEU1Kb_yRycoU-nzOfKyOktxIKTY11DTkEGBiRBqq/exec",
+// config.js (pure JS; no <script> tags)
+window.ADCA = {
+  // === Apps Script Web App Deployment URL (BOUND project) ===
+  ENDPOINT: "https://script.google.com/macros/s/AKfycbxqn_SJ6bEU1n2wHwfyWQ8a2WFKEU1Kb_yRycoU-nzOfKyOktxIKTY11DTkEGBiRBqq/exec",
 
-    // === Keys ===
-    PRIMARY_KEY: "primary_Ea7f4c2b",   // client में रह सकता है (submit-only)
-    // ADMIN key कभी client में न रखें
+  // === Public submit key (PRIMARY) — client-side is okay ===
+  PRIMARY_KEY: "primary_Ea7f4c2b",
 
-    // === UI / Flow ===
-    REQUIRE_PASSWORD: true,
-    REGISTRATION_PASSWORD: "ICC2026",
-    DUP_WINDOW_HINT_MIN: 3,
+  // === Questions source flags ===
+  USE_SHEET_QUESTIONS: false,   // (we’ll turn on later when questions API is ready)
+  FALLBACK_BASE: "",            // e.g. "https://<username>.github.io/<repo>/sets"
 
-    // === Questions source flags (अब server-only; यहाँ reserve) ===
-    USE_SHEET_QUESTIONS: true, // future use
-    FALLBACK_BASE: ""          // future use
-  };
-</script>
+  // === Misc UI config ===
+  REQUIRE_PASSWORD: true,
+  REGISTRATION_PASSWORD: "ICC2026",
+  QUESTION_TIME_SECONDS: 60,
+  DUP_WINDOW_HINT_MIN: 3
+};
