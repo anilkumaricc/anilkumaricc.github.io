@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>ADCA Quiz 2026 — Ideal Computer Centre</title>
+
+  <!-- CONFIG -->
+  <script src="config.js"></script>
+
+  <style>
+    :root{
+      --primary:#2563eb; --primary-dark:#1e40af;
+      --success:#10b981; --warning:#f59e0b; --error:#ef4444;
+      --muted:#64748b; --card:#ffffff; --bg:#fff7eb;
+      --good:#ecfdf5; --bad:#fff1f2; --cream:#fffaf0;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Segoe UI,Tahoma,Arial,sans-serif;background:linear-gradient(180deg,var(--cream),var(--bg) 60%);color:#0f172a}
+    .container{max-width:1200px;margin:18px auto;padding:0 16px}
+    .header{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;
+      padding:12px 16px;box-shadow:0 8px 30px rgba(2,6,23,.12);display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .brand{display:flex;gap:10px;align-items:center}
+    .brand-title{font-weight:900}
+    .brand-sub{font-size:12px;opacity:.92}
+    .h-actions{display:flex;gap:8px;align-items:center}
+    .h-btn{border:2px solid rgba(255,255,255,.25);background:transparent;color:#fff;padding:8px 12px;border-radius:10px;font-weight:800;cursor:not-allowed;opacity:.7}
+    .h-badge{background:#fff;color:var(--primary);padding:6px 10px;border-radius:999px;font-weight:900}
+    .card{background:var(--card);border-radius:14px;padding:16px;box-shadow:0 8px 30px rgba(2,6,23,.06)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .label{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}
+    .input,select{width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-weight:700}
+    .row{display:flex;gap:10px;align-items:center}
+    .btn{border:0;border-radius:10px;padding:12px 14px;font-weight:900;cursor:pointer}
+    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--primary-dark));color:#fff}
+    .btn-ghost{background:#fff;border:2px solid #e5e7eb;color:var(--primary);font-weight:900}
+    .kpi{display:flex;gap:10px;flex-wrap:wrap}
+    .pill{padding:6px 10px;border-radius:999px;font-weight:900;border:2px solid #e5e7eb;background:#fff}
+    .series-wrap{display:flex;gap:8px;flex-wrap:wrap}
+    .series{width:40px;height:40px;border-radius:999px;background:#eef2ff;border:2px solid #dbeafe;color:var(--primary);font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .series.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8;box-shadow:0 10px 28px rgba(29,78,216,.25)}
+    .note{font-size:12px;color:var(--muted)}
+    .split{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+    .title{font-weight:900;margin-bottom:10px}
+    .pi-badge{display:inline-flex;gap:10px;align-items:center;background:#fff;border:2px solid #e5e7eb;border-radius:12px;padding:10px 12px;font-weight:900}
+    .muted{color:var(--muted);font-size:12px}
+    .timer{font-weight:900;color:var(--primary)}
+    .option{padding:12px;border-radius:10px;border:2px solid #e5e7eb;background:#fff;cursor:pointer;font-weight:700}
+    .option:hover{border-color:var(--primary);box-shadow:0 10px 26px rgba(37,99,235,.08);transform:translateY(-3px)}
+    .option.locked{cursor:not-allowed;opacity:.9}
+    .option.correct{background:var(--good);border-color:#bbf7d0;color:#065f46;font-weight:900}
+    .option.wrong{background:var(--bad);border-color:#fecaca;color:#7f1d1d;font-weight:900}
+    .legend{display:flex;gap:12px;flex-wrap:wrap}
+    .legend-box{width:16px;height:16px;border-radius:4px;border:2px solid #e5e7eb}
+    .legend-item{display:flex;gap:8px;align-items:center;font-weight:800;color:var(--muted)}
+    .save-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;font-weight:900}
+    .ok{background:linear-gradient(90deg,#bbf7d0,#86efac);color:#064e3b}
+    .fail{background:linear-gradient(90deg,#ffcdd2,#ef9a9a);color:#7f1d1d}
+    .warn{background:#fff3cd;color:#7a5d00}
+    .hidden{display:none !important}
+    .qgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+    .qcell{aspect-ratio:1;border:2px solid #e5e7eb;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;background:#fff;cursor:pointer}
+    .qcell.cur{background:#dbeafe;border-color:#2563eb}
+    .qcell.good{background:#ecfdf5;border-color:#bbf7d0;color:#065f46}
+    .qcell.bad{background:#fff1f2;border-color:#fecaca;color:#7f1d1d}
+
+    /* modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+    .modal .box{background:#fff;border-radius:14px;max-width:720px;width:94%;padding:16px}
+    .modal .hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .modal .close{border:0;background:#f1f5f9;border-radius:8px;padding:8px 10px;cursor:pointer}
+    .help p{margin:.4rem 0}
+    .quote{background:#fff;border-left:4px solid var(--primary);padding:12px;border-radius:10px}
+    @media(max-width:900px){ .split{grid-template-columns:1fr} .grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <div>
+        <div class="brand-title">🎓 ADCA Educational Quiz</div>
+        <div class="brand-sub">Ideal Computer Centre — Hatta, Chainpur, Kaimur</div>
+      </div>
+    </div>
+    <div class="row">
+      <span class="h-badge" id="piBadge">PI: ———</span>
+      <button class="h-btn" title="(Coming Soon) Teacher Review" disabled>📄 Review</button>
+      <button class="h-btn" title="(Coming Soon) Dashboard" disabled>📊 Dashboard</button>
+      <button class="h-btn" id="helpBtn">❔ Help</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Registration -->
+    <div class="split">
+      <div class="card">
+        <div class="title">📝 Registration</div>
+
+        <div class="grid">
+          <div>
+            <div class="label">Name (Student Full Name)</div>
+            <input class="input" id="name" autocomplete="off" placeholder="e.g., Rahul Kumar"/>
+          </div>
+          <div>
+            <div class="label">Father's Name</div>
+            <input class="input" id="father" autocomplete="off" placeholder="e.g., Ajay Kumar"/>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div>
+            <div class="label">Roll (3 digits like 001)</div>
+            <input class="input" id="roll" autocomplete="off" inputmode="numeric" placeholder="001" maxlength="3"/>
+          </div>
+          <div>
+            <div class="label">Mobile (10 digits; starts 6–9)</div>
+            <input class="input" id="mobile" autocomplete="off" inputmode="numeric" placeholder="9XXXXXXXXX" maxlength="10"/>
+          </div>
+        </div>
+
+        <div style="margin-top:10px" class="grid">
+          <div>
+            <div class="label">Series (A–I)</div>
+            <div class="series-wrap" id="seriesWrap">
+              <!-- letters -->
+            </div>
+            <div class="note">Recommended: start A → B → C … क्रमवार</div>
+          </div>
+          <div>
+            <div class="label">Set (3 digits, 001–205)</div>
+            <input class="input" id="set" autocomplete="off" inputmode="numeric" placeholder="001" maxlength="3"/>
+            <div style="margin-top:8px" class="pi-badge">Your PI → <span id="piShow">———</span></div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;gap:10px">
+          <button class="btn btn-primary" id="startBtn">▶️ Start Quiz</button>
+          <div class="muted">Duplicate window: ~ <span id="dupWin">3</span> minutes (server-side)</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="title">📌 Info & Motivation</div>
+        <div class="kpi" style="margin-bottom:8px">
+          <span class="pill">No Auto-Fill</span>
+          <span class="pill">Validation Strict</span>
+          <span class="pill"><span class="timer">60s/question</span> (UX hint)</span>
+        </div>
+        <div class="quote" id="quoteBox">
+          <div style="font-weight:900" id="qAuthor">—</div>
+          <div id="qText">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Area -->
+    <div id="quizArea" class="card hidden" style="margin-top:16px">
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div class="title">🧩 Main Questions</div>
+        <div class="row" style="gap:12px">
+          <div class="timer">⏱️ <span id="timer">00:00</span></div>
+          <div class="pill" id="qCounter">Q — / —</div>
+        </div>
+      </div>
+
+      <div class="title" id="qText">—</div>
+      <div id="optWrap" class="grid">
+        <!-- options -->
+      </div>
+
+      <div class="row" style="margin-top:12px;gap:10px">
+        <button class="btn btn-ghost" id="skipBtn">⏭️ Skip</button>
+        <div style="flex:1"></div>
+        <button class="btn btn-primary" id="nextBtn">Next ▶️</button>
+        <button class="btn btn-primary hidden" id="finishBtn">🏁 Finish</button>
+      </div>
+
+      <div style="margin-top:14px">
+        <div class="legend">
+          <div class="legend-item"><span class="legend-box" style="background:#dbeafe;border-color:#2563eb"></span>Current</div>
+          <div class="legend-item"><span class="legend-box" style="background:#ecfdf5;border-color:#bbf7d0"></span>Correct</div>
+          <div class="legend-item"><span class="legend-box" style="background:#fff1f2;border-color:#fecaca"></span>Wrong</div>
+        </div>
+        <div class="qgrid" id="qGrid" style="margin-top:10px"></div>
+      </div>
+
+      <div class="row" style="margin-top:14px;gap:12px">
+        <div class="card" style="flex:1">
+          <div class="title">🕘 Previous (last attempt)</div>
+          <div id="prevBox" class="muted">—</div>
+        </div>
+        <div class="card" style="flex:1">
+          <div class="title">📚 HW/CW (Previous with answers)</div>
+          <div id="prevHW" class="muted">—</div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:14px;gap:12px">
+        <div class="card" style="flex:1">
+          <div class="title">🆕 HW (Questions only)</div>
+          <div id="curHW" class="muted">—</div>
+        </div>
+        <div class="card" style="flex:1">
+          <div class="title">🆕 CW (Questions only)</div>
+          <div id="curCW" class="muted">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="resultArea" class="card hidden" style="margin-top:16px">
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div class="title">🎉 Quiz Completed</div>
+        <div id="savePill" class="save-pill warn">Saving...</div>
+      </div>
+
+      <div class="kpi" style="margin-top:8px">
+        <span class="pill">Total: <b id="rTotal">0</b></span>
+        <span class="pill">Attempted: <b id="rAttempted">0</b></span>
+        <span class="pill" style="background:#ecfdf5;border-color:#bbf7d0;color:#065f46">Correct: <b id="rCorrect">0</b></span>
+        <span class="pill" style="background:#fff1f2;border-color:#fecaca;color:#7f1d1d">Wrong: <b id="rWrong">0</b></span>
+        <span class="pill">Skipped: <b id="rSkipped">0</b></span>
+        <span class="pill">Percent: <b id="rPct">0%</b></span>
+        <span class="pill">Time: <b id="rTime">0s</b></span>
+      </div>
+
+      <div class="row" style="margin-top:12px;gap:10px;justify-content:center">
+        <button class="btn btn-ghost" disabled title="(Coming soon)">📄 Review</button>
+        <button class="btn btn-ghost" disabled title="(Coming soon)">📊 Dashboard</button>
+        <a class="btn btn-primary" href="Quiz2026.html">🏠 Home</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Password modal -->
+  <div id="pwModal" class="modal">
+    <div class="box">
+      <div class="hdr">
+        <div class="title">🔒 Enter Access Password</div>
+        <button class="close" id="pwClose">×</button>
+      </div>
+      <div class="grid">
+        <div>
+          <div class="label">Password</div>
+          <input class="input" id="pwInput" type="password" autocomplete="new-password" placeholder="••••••••"/>
+          <div class="note">Wrong entries are ignored.</div>
+        </div>
+        <div>
+          <div class="label">&nbsp;</div>
+          <button class="btn btn-primary" id="pwOk">Unlock</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option confirm modal -->
+  <div id="optModal" class="modal">
+    <div class="box">
+      <div class="hdr">
+        <div class="title">🔐 Lock your answer?</div>
+        <button class="close" id="optClose">×</button>
+      </div>
+      <div id="optQuestion" style="font-weight:900;margin-bottom:8px">—</div>
+      <div id="optList" class="grid">
+        <!-- same options, editable -->
+      </div>
+      <div class="row" style="margin-top:10px;gap:10px;justify-content:flex-end">
+        <button class="btn btn-ghost" id="optCancel">Change</button>
+        <button class="btn btn-primary" id="optLock">Lock & Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help modal -->
+  <div id="helpModal" class="modal">
+    <div class="box help">
+      <div class="hdr">
+        <div class="title">❔ Help</div>
+        <button class="close" id="helpClose">×</button>
+      </div>
+      <p><b>Form Rules:</b> Name/Father text only; Roll 3 digits (001), Mobile 10 digits (start 6–9). PI auto-computed.</p>
+      <p><b>Series/Set:</b> A–I circles; Set 001–205. Recommended: क्रमवार A→B→C…</p>
+      <p><b>Duplicate window:</b> ~3 minutes (server)—repeat submissions block.</p>
+      <p><b>Privacy:</b> Only PRIMARY key goes public. Admin actions require ADMIN key (server-side only).</p>
+    </div>
+  </div>
+
+  <script>
+  // ====== Utility ======
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  function pad3(v){ return String(v).padStart(3,'0'); }
+  function seriesLetter(){ const act = $("#seriesWrap .series.active"); return act ? act.dataset.val : ""; }
+  function computePI(){ return (seriesLetter() || "").slice(-1) + pad3($("#set").value) + pad3($("#roll").value); }
+  function setPI(){ const pi = /^[A-Z]$/.test(seriesLetter()) && /^\d{3}$/.test($("#set").value) && /^\d{3}$/.test($("#roll").value) ? computePI() : "———";
+    $("#piShow").textContent = pi; $("#piBadge").textContent = "PI: " + pi; }
+  function isName(s){return /^[a-zA-Z .'-]{2,}$/.test(s.trim());}
+  function isRoll(s){return /^\d{3}$/.test(s);}
+  function isMobile(s){return /^[6-9]\d{9}$/.test(s);}
+  function toastSave(state,msg){
+    const pill=$("#savePill");
+    pill.classList.remove("ok","fail","warn");
+    pill.textContent = msg || (state==="ok"?"Saved ✅": state==="fail"?"Save failed":"Saving...");
+    pill.classList.add(state==="ok"?"ok":state==="fail"?"fail":"warn");
+  }
+
+  // ====== Password Gate ======
+  function showPw(){ if(!window.ADCA.REQUIRE_PASSWORD) return;
+    $("#pwModal").style.display="flex"; $("#pwInput").focus(); }
+  function hidePw(){ $("#pwModal").style.display="none"; }
+  $("#pwOk").onclick = ()=>{
+    const v=$("#pwInput").value.trim();
+    if(v && v===window.ADCA.REGISTRATION_PASSWORD){ hidePw(); }
+  };
+  $("#pwClose").onclick = hidePw;
+
+  // ====== Quotes (demo few) ======
+  const quotes = [
+    {a:"A. P. J. Abdul Kalam", t:"Dream, dream, dream. Dreams transform into thoughts and thoughts result in action."},
+    {a:"Albert Einstein", t:"Life is like riding a bicycle. To keep your balance, you must keep moving."},
+    {a:"स्वामी विवेकानंद", t:"उठो, जागो और तब तक नहीं रुको जब तक लक्ष्य प्राप्त न हो जाए।"},
+    {a:"Kabir", t:"काल करे सो आज कर, आज करे सो अब।"}
+  ];
+  function rotateQuote(){
+    const q = quotes[Math.floor(Math.random()*quotes.length)];
+    $("#qAuthor").textContent = "“" + q.a + "”";
+    $("#qText").textContent = q.t;
+  }
+
+  // ====== Series circles ======
+  const SERIES = ["A","B","C","D","E","F","G","H","I"];
+  function renderSeries(){
+    const wrap=$("#seriesWrap"); wrap.innerHTML="";
+    SERIES.forEach(s=>{
+      const d=document.createElement("div");
+      d.className="series"; d.textContent=s; d.dataset.val=s;
+      d.onclick = ()=>{ $$("#seriesWrap .series").forEach(x=>x.classList.remove("active")); d.classList.add("active"); setPI(); };
+      wrap.appendChild(d);
+    });
+  }
+
+  // ====== Demo Questions (MAIN/HW/CW) ======
+  const MAIN = [
+    {q:"CPU का पूरा नाम क्या है?", A:"Central Processing Unit", B:"Computer Personal Unit", C:"Central Power Unit", D:"Control Processing Unit", c:"A", exp:"CPU = Central Processing Unit"},
+    {q:"RAM किस प्रकार की मेमोरी है?", A:"Volatile", B:"Non-volatile", C:"Permanent", D:"Cache", c:"A", exp:"RAM volatile होती है"},
+    {q:"Input Device?", A:"Monitor", B:"Keyboard", C:"Printer", D:"Speaker", c:"B", exp:"Keyboard input device"},
+    {q:"Hard Disk किस type की memory?", A:"Primary", B:"Volatile", C:"Secondary", D:"Cache", c:"C", exp:"Secondary storage"},
+    {q:"1 GB = ?", A:"1000 MB", B:"1024 MB", C:"512 MB", D:"2048 MB", c:"B", exp:"Binary system"},
+    {q:"MS Word shortcut: Bold?", A:"Ctrl+B", B:"Ctrl+I", C:"Ctrl+U", D:"Ctrl+S", c:"A", exp:"Bold = Ctrl+B"},
+    {q:"Internet protocol (email send)?", A:"FTP", B:"SMTP", C:"POP3", D:"IMAP", c:"B", exp:"SMTP for sending"},
+    {q:"Spreadsheet formula starts with?", A:"@", B:"#", C:"=", D:"$", c:"C", exp:"Excel formulas start with ="},
+  ];
+  const HW = [
+    {q:"[HW] Father of Computer?", A:"Charles Babbage", B:"Alan Turing", C:"Bill Gates", D:"Ada Lovelace", c:"A", exp:"Babbage"},
+    {q:"[HW] ROM full form?", A:"Read Only Memory", B:"Random Only Memory", C:"Read One Memory", D:"Rapid On Memory", c:"A", exp:"Permanent"}
+  ];
+  const CW = [
+    {q:"[CW] MS Word new doc path?", A:"File > Open", B:"File > New > Blank", C:"Edit > New", D:"Home > New", c:"B", exp:"File>New>Blank"},
+    {q:"[CW] Virus बचाव?", A:"No antivirus", B:"Unknown files download", C:"Regular updates & antivirus", D:"Turn off firewall", c:"C", exp:"Security hygiene"}
+  ];
+  const ALL = MAIN; // Quiz के लिए अभी MAIN
+
+  // ====== Quiz State ======
+  let cur = 0, answers = [];  // answers[i] = 'A'/'B'/... or -1 for skip
+  let startTime=0, timerInt=null, secs=0;
+  function fmt(n){return String(n).padStart(2,"0");}
+  function startTimer(){ clearInterval(timerInt); secs=0; timerInt=setInterval(()=>{secs++; $("#timer").textContent=`${fmt(Math.floor(secs/60))}:${fmt(secs%60)}`;},1000); }
+
+  function renderQGrid(){
+    const g=$("#qGrid"); g.innerHTML="";
+    for(let i=0;i<ALL.length;i++){
+      const d=document.createElement("div"); d.className="qcell"; d.textContent=(i+1);
+      if(i===cur) d.classList.add("cur");
+      if(answers[i] && answers[i] !== -1){
+        d.classList.add(answers[i]===correctLetter(ALL[i]) ? "good":"bad");
+      }
+      d.onclick = ()=>{ cur=i; paintQuestion(); };
+      g.appendChild(d);
+    }
+  }
+  function correctLetter(item){return item.c;}
+
+  function paintQuestion(){
+    $("#qCounter").textContent = `Q ${cur+1} / ${ALL.length}`;
+    $("#qText").textContent = ALL[cur].q;
+    const wrap=$("#optWrap"); wrap.innerHTML="";
+    ["A","B","C","D"].forEach(k=>{
+      const div=document.createElement("div");
+      div.className="option"; div.textContent = `${k}. ${ALL[cur][k]}`;
+      const locked = typeof answers[cur] !== "undefined";
+      if(locked){
+        div.classList.add("locked");
+        const your = answers[cur];
+        if(k===correctLetter(ALL[cur])) div.classList.add("correct");
+        else if(k===your) div.classList.add("wrong");
+      }else{
+        div.onclick = ()=> openOptionConfirm(k);
+      }
+      wrap.appendChild(div);
+    });
+    // buttons
+    $("#nextBtn").classList.toggle("hidden", !(typeof answers[cur] !== "undefined" && cur < ALL.length-1));
+    $("#finishBtn").classList.toggle("hidden", !(typeof answers[cur] !== "undefined" && cur === ALL.length-1));
+    renderQGrid();
+    // side HW/CW placeholders
+    $("#curHW").textContent = HW.map(x=>x.q).join(" • ");
+    $("#curCW").textContent = CW.map(x=>x.q).join(" • ");
+  }
+
+  // ====== Option Confirm Modal (editable in modal) ======
+  let pendingChoice = null;
+  function openOptionConfirm(k){
+    pendingChoice = k;
+    $("#optQuestion").textContent = ALL[cur].q;
+    const L=["A","B","C","D"];
+    const list=$("#optList"); list.innerHTML="";
+    L.forEach(letter=>{
+      const d=document.createElement("div"); d.className="option"; d.textContent=`${letter}. ${ALL[cur][letter]}`;
+      if(letter===pendingChoice){ d.style.borderColor="#2563eb"; d.style.boxShadow="0 10px 26px rgba(37,99,235,.12)"; }
+      d.onclick = ()=>{ pendingChoice = letter; openOptionConfirm(pendingChoice); }; // re-render
+      list.appendChild(d);
+    });
+    $("#optModal").style.display="flex";
+  }
+  $("#optLock").onclick = ()=>{
+    answers[cur] = pendingChoice;
+    $("#optModal").style.display="none";
+    paintQuestion();
+  };
+  $("#optCancel").onclick = ()=>{ $("#optModal").style.display="none"; };
+  $("#optClose").onclick = ()=>{ $("#optModal").style.display="none"; };
+
+  // ====== Prev attempts (by roll) ======
+  async function loadPreviousByRoll(roll){
+    try{
+      const url = `${window.ADCA.ENDPOINT}?action=listByRoll&roll=${encodeURIComponent(roll)}&key=${encodeURIComponent(window.ADCA.PRIMARY_KEY)}&limit=3`;
+      const r = await fetch(url);
+      const j = await r.json();
+      if(!j.ok || !Array.isArray(j.rows)) { $("#prevBox").textContent = "—"; return; }
+      if(j.rows.length===0){ $("#prevBox").textContent="No previous attempts"; return;}
+      const last=j.rows[0];
+      $("#prevBox").innerHTML = `
+        <b>${last.timestamp}</b> • Series: <b>${last.series}</b> • Set: <b>${last.set}</b> •
+        Score: <b>${last.correctAns}/${last.totalQue}</b> • Attempt: <b>${last.attemptCount||1}</b>
+      `;
+      // previous HW/CW with answers (यदि saved answers में HW/CW indices शामिल हों)
+      $("#prevHW").textContent = "Loaded previous. (Detailed mapping बाद में questions-API के साथ)";
+    }catch(e){ $("#prevBox").textContent="—"; }
+  }
+
+  // ====== Submit to server ======
+  async function submitResults(){
+    const name=$("#name").value.trim();
+    const father=$("#father").value.trim();
+    const roll=$("#roll").value.trim();
+    const mobile=$("#mobile").value.trim();
+    const series=seriesLetter();
+    const set= $("#set").value.trim();
+    // stats
+    let correct=0, attempted=0, skipped=0;
+    answers.forEach((a,i)=>{ if(a===-1 || typeof a==="undefined") { if(a===-1) skipped++; } else {attempted++; if(a===correctLetter(ALL[i])) correct++;}});
+    const wrong = attempted - correct;
+    const payload = {
+      action:"submit",
+      apiKey: window.ADCA.PRIMARY_KEY,
+      studentName: name,
+      fatherName: father,
+      rollNumber: roll,
+      mobile: mobile,
+      series: series,
+      setNumber: set,
+      totalQuestions: ALL.length,
+      correctAnswers: correct,
+      wrong: wrong,
+      skipped: skipped,
+      attempted: attempted,
+      percentage: Math.round((correct/ALL.length)*10000)/100,
+      timeTakenSeconds: secs,
+      answers: answers.map((a,i)=>({q:i+1, selected: (a===-1? -1 : a)})),
+      submitToken: sessionStorage.getItem("SUBMIT_TOKEN")||""
+    };
+    toastSave("warn","Saving...");
+    try{
+      const r = await fetch(window.ADCA.ENDPOINT+"?action=submit",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify(payload)
+      });
+      const j = await r.json();
+      if(j && j.ok){
+        toastSave("ok","Saved ✅");
+      }else{
+        toastSave("fail", j && j.error ? j.error : "Save failed");
+      }
+    }catch(e){
+      toastSave("fail","Network error");
+    }
+  }
+
+  // ====== Flow ======
+  function validateForm(){
+    const name=$("#name").value.trim();
+    const father=$("#father").value.trim();
+    const roll=$("#roll").value.trim();
+    const mobile=$("#mobile").value.trim();
+    const series=seriesLetter();
+    const set=$("#set").value.trim();
+    if(!isName(name)) return "Invalid Name";
+    if(!isName(father)) return "Invalid Father Name";
+    if(!isRoll(roll)) return "Invalid Roll";
+    if(!isMobile(mobile)) return "Invalid Mobile";
+    if(!series) return "Select Series";
+    if(!isRoll(set)) return "Invalid Set (need 3 digits)";
+    return "";
+  }
+
+  function startQuiz(){
+    const err = validateForm();
+    if(err){ alert("❌ " + err); return; }
+    // lock registration values (optional)
+    $("#quizArea").classList.remove("hidden");
+    rotateQuote();
+    startTime = Date.now(); startTimer();
+    answers = new Array(ALL.length);
+    cur = 0;
+    paintQuestion();
+    loadPreviousByRoll($("#roll").value.trim());
+  }
+
+  function skipQ(){ answers[cur] = -1; goNext(); }
+  function goNext(){
+    if(cur < ALL.length-1){ cur++; paintQuestion(); }
+    else{
+      // finish
+      $("#quizArea").classList.add("hidden");
+      $("#resultArea").classList.remove("hidden");
+      // stats
+      let correct=0, attempted=0, skipped=0;
+      answers.forEach((a,i)=>{ if(a===-1 || typeof a==="undefined"){ if(a===-1) skipped++; }else{ attempted++; if(a===correctLetter(ALL[i])) correct++; } });
+      const wrong = attempted - correct;
+      $("#rTotal").textContent = ALL.length;
+      $("#rAttempted").textContent = attempted;
+      $("#rCorrect").textContent = correct;
+      $("#rWrong").textContent = wrong;
+      $("#rSkipped").textContent = skipped;
+      $("#rPct").textContent = Math.round((correct/ALL.length)*10000)/100 + "%";
+      $("#rTime").textContent = secs + "s";
+      submitResults();
+    }
+  }
+
+  // events
+  $("#startBtn").onclick = startQuiz;
+  $("#skipBtn").onclick = skipQ;
+  $("#nextBtn").onclick = ()=>{ if(typeof answers[cur] === "undefined"){ alert("पहले कोई option चुनें/lock करें."); return;} goNext(); };
+  $("#finishBtn").onclick = ()=>{ if(typeof answers[cur] === "undefined"){ alert("पहले option lock करें."); return;} goNext(); };
+
+  // inputs
+  $("#name").addEventListener("input", e=> e.target.value = e.target.value.replace(/[^a-zA-Z .'-]/g,""));
+  $("#father").addEventListener("input", e=> e.target.value = e.target.value.replace(/[^a-zA-Z .'-]/g,""));
+  $("#roll").addEventListener("input", e=>{ e.target.value = e.target.value.replace(/\D/g,"").slice(0,3); setPI(); });
+  $("#mobile").addEventListener("input", e=>{ e.target.value = e.target.value.replace(/\D/g,"").slice(0,10); });
+  $("#set").addEventListener("input", e=>{ e.target.value = e.target.value.replace(/\D/g,"").slice(0,3); setPI(); });
+
+  // help modal
+  $("#helpBtn").onclick = ()=>{ $("#helpModal").style.display="flex"; };
+  $("#helpClose").onclick = ()=>{ $("#helpModal").style.display="none"; };
+
+  // init
+  window.addEventListener("DOMContentLoaded", ()=>{
+    // force password every load
+    if(window.ADCA.REQUIRE_PASSWORD){ $("#pwModal").style.display="flex"; }
+    $("#dupWin").textContent = window.ADCA.DUP_WINDOW_HINT_MIN || 3;
+    renderSeries();
+    rotateQuote();
+  });
+
+  // close modal on outside click
+  window.onclick = (e)=>{
+    if(e.target === $("#pwModal")) $("#pwModal").style.display="none";
+    if(e.target === $("#optModal")) $("#optModal").style.display="none";
+    if(e.target === $("#helpModal")) $("#helpModal").style.display="none";
+  };
+
+  </script>
+</body>
+</html>
