@@ -1,84 +1,82 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>ADCA Quiz 2026</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="preconnect" href="https://script.google.com">
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(135deg,#e0f2fe,#f5f3ff);min-height:100vh;margin:0;display:grid;place-items:center}
-    .card{background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(2,6,23,.08);padding:24px;max-width:520px;width:92%}
-    h1{margin:0 0 6px;font-size:22px}
-    p{margin:0 0 16px;color:#475569}
-    .row{display:flex;gap:10px;align-items:center;margin-top:8px}
-    input,button{padding:10px 12px;border:2px solid #e2e8f0;border-radius:10px;font-weight:700}
-    button{background:linear-gradient(90deg,#2563eb,#1e40af);color:#fff;border:0;cursor:pointer}
-    button:hover{transform:translateY(-1px)}
-  </style>
+<meta charset="utf-8">
+<title>ADCA Quiz 2026</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://script.google.com">
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(135deg,#e0f2fe,#f5f3ff);min-height:100vh;margin:0;display:grid;place-items:center}
+.card{background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(2,6,23,.08);padding:24px;max-width:520px;width:92%}
+h1{margin:0 0 6px;font-size:22px}
+p{margin:0 0 16px;color:#475569}
+.row{display:flex;gap:10px;align-items:center;margin-top:8px}
+input,button{padding:10px 12px;border:2px solid #e2e8f0;border-radius:10px;font-weight:700}
+button{background:linear-gradient(90deg,#2563eb,#1e40af);color:#fff;border:0;cursor:pointer}
+button:hover{transform:translateY(-1px)}
+</style>
 </head>
 <body>
-  <div class="card">
-    <h1> 🎓Advanced Diploma In Computer Application Quiz</h1>
-    
-    <div id="pwBlock" class="row" style="display:none">
-      <input id="pw" type="password" placeholder="Enter access password" autocomplete="off">
-      <button id="go">Start</button>
-    </div>
+<div class="card">
+  <h1>🎓 ADCA Quiz 2026</h1>
+  <p>Start your test — secure registration hosted on Google Apps Script.</p>
 
-    <div id="noPw" class="row" style="display:none">
-      <button id="go2">Start Quiz</button>
-    </div>
-
-    <p id="msg" style="margin-top:10px;color:#ef4444;font-weight:700;"></p>
+  <div id="pwBlock" class="row" style="display:none">
+    <input id="pw" type="password" placeholder="Enter access password" autocomplete="off">
+    <button id="go">Start</button>
   </div>
 
-  <!-- 1) Load config FIRST (pure JS file; no <script> tags inside) -->
-  <script src="config.js?v=2"></script>
+  <div id="noPw" class="row" style="display:none">
+    <button id="go2">Start Quiz</button>
+  </div>
 
-  <!-- 2) Boot -->
-  <script>
-  (function(){
-    const cfg = (window.ADCA || {});
-    const msg = document.getElementById('msg');
-    const pwBlock = document.getElementById('pwBlock');
-    const noPw   = document.getElementById('noPw');
-    const go     = document.getElementById('go');
-    const go2    = document.getElementById('go2');
+  <p id="msg" style="margin-top:10px;color:#ef4444;font-weight:700;"></p>
+</div>
 
-    // If config.js failed to load, stop gracefully
-    if (!cfg || !cfg.ENDPOINT) {
-      msg.textContent = "Config missing or invalid: please ensure config.js is in the same folder and contains window.ADCA.ENDPOINT.";
-      pwBlock.style.display = "none";
-      noPw.style.display = "none";
-      return;
-    }
+<!-- 1) Load config FIRST; add cache-buster -->
+<script src="config.js?v=3"></script>
 
-    // Always force password when REQUIRE_PASSWORD is true
-    const needsPw = !!cfg.REQUIRE_PASSWORD;
-    pwBlock.style.display = needsPw ? 'flex' : 'none';
-    noPw.style.display    = needsPw ? 'none'  : 'flex';
+<script>
+(function(){
+  // Guard: config present?
+  if (!window.ADCA || !window.ADCA.ENDPOINT) {
+    document.body.innerHTML =
+      '<div class="card"><h1>🎓Advanced Diploma In Computer Application Quiz</h1>' +
+      '<p style="color:#ef4444;font-weight:800">Config missing or invalid: please ensure <code>config.js</code> is in the same folder and contains <code>window.ADCA.ENDPOINT</code>.</p></div>';
+    return;
+  }
 
-    function proceed() {
-      // Redirect to your Apps Script bound web app root (serves index.html there)
-      window.location.href = String(cfg.ENDPOINT);
-    }
+  const cfg = window.ADCA;
+  const msg = document.getElementById('msg');
+  const pwBlock = document.getElementById('pwBlock');
+  const noPw   = document.getElementById('noPw');
+  const go     = document.getElementById('go');
+  const go2    = document.getElementById('go2');
 
-    if (needsPw) {
-      go.onclick = () => {
-        const v = (document.getElementById('pw').value||'').trim();
-        if (v === String(cfg.REGISTRATION_PASSWORD||'')) {
-          sessionStorage.setItem('quizUnlocked','1'); // consumed by your bound index.html
-          proceed();
-        } else {
-          msg.textContent = 'Incorrect password';
-        }
-      };
-    } else {
-      go2.onclick = proceed;
-    }
-  })();
-  </script>
+  const needsPw = !!cfg.REQUIRE_PASSWORD;
+  pwBlock.style.display = needsPw ? 'flex' : 'none';
+  noPw.style.display    = needsPw ? 'none'  : 'flex';
+
+  function proceed() {
+    // Apps Script WebApp में quiz UI serve होगा: doGet(e) -> action=quiz
+    const url = cfg.ENDPOINT + '?action=quiz';
+    window.location.href = url;
+  }
+
+  if (needsPw) {
+    go.onclick = () => {
+      const v = (document.getElementById('pw').value||'').trim();
+      if (v === String(cfg.REGISTRATION_PASSWORD||'')) {
+        sessionStorage.setItem('quizUnlocked','1');
+        proceed();
+      } else {
+        msg.textContent = 'Incorrect password';
+      }
+    };
+  } else {
+    go2.onclick = proceed;
+  }
+})();
+</script>
 </body>
 </html>
-
-
