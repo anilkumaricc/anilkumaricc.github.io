@@ -19,7 +19,7 @@ button:hover{transform:translateY(-1px)}
 <body>
 <div class="card">
   <h1>🎓 ADCA Quiz 2026</h1>
-  <p>Start your test — secure registration hosted on Google Apps Script.</p>
+  <p>Enter Your Password Here.</p>
 
   <div id="pwBlock" class="row" style="display:none">
     <input id="pw" type="password" placeholder="Enter access password" autocomplete="off">
@@ -57,11 +57,12 @@ button:hover{transform:translateY(-1px)}
   pwBlock.style.display = needsPw ? 'flex' : 'none';
   noPw.style.display    = needsPw ? 'none'  : 'flex';
 
-  function proceed() {
-    // Apps Script WebApp में quiz UI serve होगा: doGet(e) -> action=quiz
-    const url = cfg.ENDPOINT + '?action=quiz';
-    window.location.href = url;
-  }
+function proceed() {
+  // OPTION A: doGet में हमने index serve किया है जब action='ui' या blank हो
+  const url = cfg.ENDPOINT + '?action=ui';   // ← यही बेहतर/safer
+  // (या) const url = cfg.ENDPOINT;          // अगर doGet default index serve करता है
+  window.location.href = url;
+}
 
   if (needsPw) {
     go.onclick = () => {
@@ -80,3 +81,4 @@ button:hover{transform:translateY(-1px)}
 </script>
 </body>
 </html>
+
