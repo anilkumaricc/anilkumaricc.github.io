@@ -1,91 +1,184 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
   <meta charset="utf-8">
   <title>🎓 ADCA Quiz 2026 — Access</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
   <style>
     :root{
-      --primary:#2563eb; --primary-dark:#1e40af;
-      --bg:#f6f7ff;
+      --bg:#0b1220; --card:#0f172a; --muted:#94a3b8;
+      --primary:#2563eb; --primary-2:#1e40af;
+      --ok:#10b981; --warn:#f59e0b;
+      --btn:#06b6d4; --btn-2:#0ea5e9;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Segoe UI',Tahoma,Verdana,sans-serif;min-height:100vh;
-         background:linear-gradient(135deg,#eaf1ff 0%,#fff4e5 100%);display:grid;place-items:center}
-    .modal{background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(2,6,23,.2);
-           padding:22px;max-width:860px;width:94%}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    @media(max-width:720px){.grid{grid-template-columns:1fr}}
-    .col{padding:10px}
-    .title{font-weight:900;font-size:22px;margin-bottom:4px;display:flex;gap:10px;align-items:center}
-    .sub{color:#475569;font-size:13px}
-    .pwd-box{margin:12px 0}
-    input[type=password]{width:100%;padding:14px;border:2px solid #e5e7eb;border-radius:12px;
-                         font-size:16px;background:#f8fafc;outline:none}
-    input[type=password]:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 4px rgba(37,99,235,.08)}
-    .btn{display:inline-block;padding:12px 16px;border-radius:12px;border:0;font-weight:900;cursor:pointer}
-    .btn-primary{background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff}
-    .btn-primary:hover{transform:translateY(-1px)}
-    .btn-bypass{background:linear-gradient(90deg,#06b6d4,#0ea5a0);color:#fff;width:100%}
-    .hint{font-size:12px;color:#6b7280;margin-top:8px}
-    .divider{width:100%;height:1px;background:#eef2ff;margin:10px 0}
-    .center{display:flex;align-items:center;gap:10px}
-    .lock{font-size:22px}
+    html,body{height:100%}
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:radial-gradient(70% 100% at 50% 0%,#0b1220 0%,#0b1220 40%,#0a0f1a 100%);
+      color:#e5e7eb; display:grid; place-items:center; padding:18px;
+    }
+    .wrap{
+      width:min(1100px,96vw);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      border:1px solid rgba(148,163,184,.2);
+      border-radius:20px; box-shadow:0 30px 100px rgba(0,0,0,.35);
+      padding:22px;
+    }
+    .head{
+      display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px;
+    }
+    .brand{font-weight:900; font-size:18px; letter-spacing:.2px}
+    .sub{color:var(--muted); font-size:12px}
+    .grid{
+      display:grid; grid-template-columns:1fr 1fr; gap:18px;
+    }
+    @media (max-width:840px){ .grid{grid-template-columns:1fr} }
+    .card{
+      background:var(--card);
+      border:1px solid rgba(148,163,184,.2);
+      border-radius:16px; padding:18px;
+      min-height:220px;
+    }
+    .title{
+      font-size:22px; font-weight:900; display:flex; align-items:center; gap:10px;
+      margin-bottom:10px;
+    }
+    .hint{color:var(--muted); font-size:13px; margin:6px 0 12px}
+    .input{
+      background:#0a1322; color:#fff; border:2px solid #1f2a44;
+      border-radius:12px; padding:14px 16px; width:100%; outline:none; font-weight:800;
+    }
+    .input:focus{border-color:#3b82f6; box-shadow:0 0 0 6px rgba(59,130,246,.12)}
+    .row{display:flex; align-items:center; gap:12px; margin-top:14px}
+    .btn{
+      cursor:pointer; border:0; font-weight:900; border-radius:12px;
+      padding:14px 18px; transition:.18s;
+      background:linear-gradient(90deg,var(--primary),var(--primary-2)); color:#fff;
+      box-shadow:0 10px 32px rgba(37,99,235,.25);
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn-ghost{
+      background:#0a1322; color:#93c5fd; border:2px solid #1f2a44;
+    }
+    .sep{
+      display:flex; align-items:center; justify-content:center; color:#6b7280; font-weight:800;
+      margin:8px 0;
+    }
+    .bypass{
+      display:block; width:100%;
+      background:linear-gradient(90deg,var(--btn),var(--btn-2));
+      color:#003244; text-align:center; font-weight:900; border-radius:12px;
+      padding:16px 18px; border:0; cursor:pointer; transition:.18s;
+      box-shadow:0 12px 38px rgba(14,165,233,.28);
+    }
+    .bypass:hover{transform:translateY(-2px)}
+    .muted{color:var(--muted); font-size:12px; text-align:center; margin-top:10px}
+    .hr{
+      height:1px; background:linear-gradient(90deg,transparent,#334155,transparent);
+      margin:14px 0;
+    }
+    .bullets{color:#cbd5e1; font-size:13px; line-height:1.65; margin-top:8px}
+    .label{font-size:12px; color:#9ca3af; font-weight:800; margin-top:10px}
+    .tiny{font-size:12px; color:#9ca3af}
+    .ok{color:#10b981}
+    .warn{color:#fbbf24}
+    .link{color:#93c5fd; text-decoration:none}
+    .link:hover{text-decoration:underline}
   </style>
 </head>
 <body>
 
-<div class="modal" role="dialog" aria-modal="true" aria-labelledby="accTitle">
-  <div class="grid">
-    <!-- LEFT: Password -->
-    <div class="col" style="border-right:1px dashed #eef2ff">
-      <div class="title" id="accTitle">🔒 Access Required</div>
-      <div class="sub">Teacher/Admin students: पासवर्ड डालकर पूरा टेस्ट खोलें</div>
-
-      <div class="pwd-box">
-        <input id="pw" type="password" placeholder="Enter password" autocomplete="new-password" />
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="brand">🎓 Advanced Diploma In Computer Application Quiz</div>
+        <div class="sub">Ideal Computer Centre • Hatta, Chainpur, Kaimur (Bihar)</div>
       </div>
-      <button class="btn btn-primary" onclick="unlock()">Unlock & Continue</button>
-      <div class="hint">Hint: अपने Teacher से पूछें</div>
+      <div class="tiny">Secure Access • Client-side only page</div>
     </div>
 
-    <!-- RIGHT: Bypass -->
-    <div class="col" style="text-align:center">
-      <div class="title">🔓 Without Password</div>
-      <div class="sub">यदि पासवर्ड नहीं है — practice/test चलाएँ (no PII submit)</div>
-      <div style="height:10px"></div>
-      <button class="btn btn-bypass" onclick="bypass()">Bypass Quiz — Open Practice</button>
-      <div class="divider"></div>
-      <div class="sub">Bypass सीधे GitHub Hosted पेज खोलता है: <em>Quiz2026</em></div>
+    <div class="grid">
+      <!-- LEFT: Password flow -> Apps Script UI -->
+      <div class="card">
+        <div class="title">🔒 Access Required</div>
+        <div class="hint">Teacher/Admin students: पासवर्ड डालकर पूरा टेस्ट खोलें</div>
+
+        <label class="label" for="pwd">Password</label>
+        <input id="pwd" class="input" type="password" placeholder="••••••••" autocomplete="new-password" />
+
+        <div class="row">
+          <button class="btn" onclick="unlock()">Unlock & Continue</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('pwd').value=''">Clear</button>
+        </div>
+
+        <div class="hr"></div>
+        <div class="tiny">Hint: अपने Teacher से पूछें • गलत पासवर्ड पर कोई data submit नहीं होता</div>
+
+        <div class="bullets" style="margin-top:10px">
+          <div>• सही पासवर्ड पर <span class="ok">Apps Script</span> UI खुलेगा (index.html).</div>
+          <div>• Server पर mobile नंबर <span class="ok">obfuscate</span> होकर store होता है.</div>
+          <div>• DevTools (F12) से भी API keys hidden रहती हैं (server verify).</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Bypass practice (GitHub) -->
+      <div class="card">
+        <div class="title">🔐 Without Password</div>
+        <div class="hint">यदि पासवर्ड नहीं है — <span class="warn">practice/test चलाएँ</span> (no PII submit)</div>
+
+        <button class="bypass" onclick="openBypass()">Bypass Quiz — Open Practice</button>
+        <div class="muted">Bypass से basic demo/practice खुलेगा — यह सीधे GitHub Hosted <code>index.html</code> / <code>Quiz2026.html</code> पर जाता है।</div>
+
+        <div class="hr"></div>
+        <div class="bullets">
+          <div>• Practice mode में server submit disabled रहता है।</div>
+          <div>• किसी भी समय आप <a class="link" href="#" onclick="openBypass()">GitHub version</a> ट्राइ कर सकते हैं।</div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-  // ====== CONFIG (edit यहाँ करें) ======
-  // 1) Apps Script Deployment URL (BOUND project वाला, index.html/registration serve करता है)
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyC_kGdWjTuMOm0-blHhqjyn4mq_iJKkhTYr6zMj_NMVQd0EZgcgfM2ztjNWCoRW3q2/exec?action=ui';
-  // 2) Bypass destination (आपका GitHub pages home)
-  const BYPASS_URL      = 'https://anilkumaricc.github.io/';
-  // 3) Valid passwords (client-side gate; जरूरत हो तो बदलें/बढ़ाएँ)
-  const VALID_PASSWORDS = ['hatta2025','quizideal','adca2025','ICC2026'];
+  <script>
+    // ====== EDITABLE SETTINGS ======
+    // Apps Script Web App (latest deployment) — UI serve करता है: action=ui
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyC_kGdWjTuMOm0-blHhqjyn4mq_iJKkhTYr6zMj_NMVQd0EZgcgfM2ztjNWCoRW3q2/exec?action=ui";
 
-  function unlock(){
-    const v = (document.getElementById('pw').value||'').trim();
-    if(!v){ alert('कृपया पासवर्ड डालें'); return; }
-    if(VALID_PASSWORDS.includes(v)){
-      // आगे सीधे Apps Script index (registration) पेज पर
-      window.location.href = APPS_SCRIPT_URL;
-    }else{
-      alert('गलत पासवर्ड');
-      document.getElementById('pw').value='';
+    // Bypass destination (GitHub demo)
+    const BYPASS_URL = "https://anilkumaricc.github.io/";
+
+    // Allowed passwords (lowercased compare). जरूरत पर जोड़/हटाएँ:
+    const ALLOWED_PASSWORDS = ["hatta2025","quizideal","adca2025","icc2026"];
+
+    // ====== HANDLERS ======
+    function unlock(){
+      const val = (document.getElementById('pwd').value || "").trim().toLowerCase();
+      if(!val){
+        alert("कृपया पासवर्ड दर्ज करें"); return;
+      }
+      if(ALLOWED_PASSWORDS.includes(val)){
+        // session flag optional (अगर आगे जरूरत हो)
+        try{ sessionStorage.setItem('quizUnlocked','1'); }catch(_){}
+        window.location.href = APPS_SCRIPT_URL;
+      }else{
+        alert("गलत पासवर्ड");
+        document.getElementById('pwd').value = "";
+      }
     }
-  }
 
-  function bypass(){
-    // नए टैब में आपकी GitHub साइट open — जैसा आपने कहा
-    window.open(BYPASS_URL, '_blank', 'noopener');
-  }
-</script>
+    function openBypass(){
+      window.location.href = BYPASS_URL;
+    }
+
+    // Disable autofill suggestions totally (cosmetic)
+    (function(){
+      const el = document.getElementById('pwd');
+      el.setAttribute('autocomplete','new-password');
+      el.setAttribute('autocapitalize','off');
+      el.setAttribute('autocorrect','off');
+      el.setAttribute('spellcheck','false');
+    })();
+  </script>
 </body>
 </html>
