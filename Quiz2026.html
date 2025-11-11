@@ -1,476 +1,137 @@
-<!-- === START: Quiz2026.html (GitHub Landing) === -->
-<!DOCTYPE html>
+<!-- === START: Quiz2026.html (GitHub landing) === -->
+<!doctype html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎓 ADCA Quiz Registration — Ideal Computer Centre</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>🎓 Advanced Diploma In Computer Application Quiz</title>
   <style>
     :root{
-      --primary:#2563eb; --primary-dark:#1e40af;
-      --success:#10b981; --warning:#f59e0b; --danger:#ef4444;
-      --bg1:#eef2ff; --bg2:#fff7eb; --card:#ffffff; --muted:#64748b;
-      --chip:#0ea5e9; --subject:#0f766e; --sets:#92400e;
+      --primary:#2563eb; --primary2:#1e40af; --ok:#10b981; --warn:#f59e0b;
+      --bg:#f3f5ff; --card:#ffffff; --muted:#64748b;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Segoe UI',Tahoma,Verdana,sans-serif;min-height:100vh;
-         background:linear-gradient(135deg,#eaf1ff 0%,#fff4e5 100%);color:#0f172a}
-    .wrap{max-width:1200px;margin:20px auto;padding:0 16px}
-    .card{background:var(--card);border-radius:22px;box-shadow:0 12px 40px rgba(2,6,23,.08);overflow:hidden}
-
-    /* Header */
-    .header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-            color:#fff;padding:18px 16px;display:grid;grid-template-columns:180px 1fr 180px;align-items:center;gap:10px}
-    .h-left,.h-right{display:flex;align-items:center}
-    .h-left{justify-content:flex-start}
-    .h-right{justify-content:flex-end}
-    .h-center{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
-    .title{font-weight:900;font-size:20px}
-    .sub{opacity:.95;font-size:12px}
-    .btn-link{background:#fff;border:0;color:var(--primary);font-weight:800;border-radius:12px;
-              padding:10px 14px;cursor:pointer;transition:.2s;box-shadow:0 6px 20px rgba(255,255,255,.15)}
-    .btn-link:hover{transform:translateY(-2px)}
-    .btn-help{width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.6);
-              background:transparent;color:#fff;font-weight:900;cursor:pointer;transition:.2s;margin-left:8px}
-    .btn-help:hover{background:rgba(255,255,255,.15)}
-
-    /* Body */
-    .body{padding:22px}
-    .cols{display:grid;grid-template-columns:1fr 1.05fr;gap:20px}
-    @media (max-width:1000px){.cols{grid-template-columns:1fr}}
-    .panel{background:#fff;border:1px solid #eaeefb;border-radius:18px;padding:20px}
-
-    /* Left: Form */
-    .sec-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .sec-title h3{font-size:18px;color:var(--primary);font-weight:900}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    @media (max-width:640px){.grid2{grid-template-columns:1fr}}
-    label{font-size:12px;font-weight:800;color:#334155;margin-bottom:6px;display:block}
-    .req{color:#ef4444;margin-left:4px}
-    input,select{width:100%;padding:12px 14px;border:2px solid #e6ebff;border-radius:12px;
-                 background:#f8fafc;font-size:14px;outline:none;transition:.2s}
-    input:focus,select:focus{border-color:var(--primary);background:#fff;
-                             box-shadow:0 0 0 4px rgba(37,99,235,.08)}
-    .muted{font-size:12px;color:var(--muted)}
-    .submit{margin-top:16px;display:flex;gap:12px;align-items:center}
-    .btn{padding:14px 18px;border-radius:12px;border:0;font-weight:900;cursor:pointer;transition:.2s}
-    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;flex:1}
-    .btn-primary:hover{transform:translateY(-1px)}
-    .btn-ghost{background:#fff;border:2px solid #e6ebff;color:#var(--primary);font-weight:900}
-    .btn-ghost:hover{transform:translateY(-1px);border-color:var(--primary)}
-
-    /* Right: Series & Sets (cards) */
-    .series-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    @media (max-width:640px){.series-grid{grid-template-columns:1fr}}
-    .series-card{border:1px solid #e6ebff;border-radius:14px;padding:14px;background:#fff;
-                 transition:.2s;cursor:pointer;display:flex;gap:12px;align-items:center}
-    .series-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(2,6,23,.06);border-color:var(--primary)}
-    .chip{min-width:44px;min-height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-          font-weight:900;color:#fff;background:var(--chip);box-shadow:0 6px 16px rgba(14,165,233,.25)}
-    .card-text{display:flex;flex-direction:column;gap:4px}
-    .subject{font-weight:900;color:var(--subject)}
-    .setinfo{font-size:12px;color:#7c2d12;background:#fff3cd;border:1px solid #ffe08a;display:inline-block;
-             padding:4px 8px;border-radius:999px}
-
-    /* Footer quote */
-    .quote{margin-top:16px;padding:16px;border-radius:14px;background:#fff8ec;border:2px solid #ffe0b0}
-    .q-hi{font-weight:900;color:#8b5e00}
-    .q-en{margin-top:6px;color:#7c2d12}
-    .a{margin-top:6px;font-size:12px;color:#7c2d12;opacity:.9}
-
-    /* Overlay (two-column gate) */
-    .gate{position:fixed;inset:0;background:rgba(3,7,18,.86);display:flex;align-items:center;justify-content:center;z-index:9999}
-    .gate-inner{max-width:900px;width:94%;display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    @media (max-width:800px){.gate-inner{grid-template-columns:1fr}}
-    .gate-card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-    .gate-title{font-weight:900;font-size:18px}
-    .gate-note{font-size:12px;color:#64748b;margin-top:6px}
-    .pwd{width:100%;margin:14px 0;padding:12px;border:2px solid #e6ebff;border-radius:10px}
-    .btn-unlock{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:0;border-radius:12px;padding:12px 16px;font-weight:900;cursor:pointer;width:100%}
-    .btn-bypass{background:#fff;border:2px solid #e6ebff;border-radius:12px;padding:12px 16px;font-weight:900;cursor:pointer;width:100%;margin-top:10px}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(135deg,#e9eeff,#fff7ec);min-height:100vh;color:#0f172a;display:grid;place-items:center;padding:18px}
+    .wrap{max-width:960px;width:100%}
+    .head{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border-radius:16px 16px 0 0;padding:16px 18px;box-shadow:0 12px 30px rgba(2,6,23,.12)}
+    .title{font-weight:900;font-size:18px}
+    .sub{opacity:.95;font-size:12px;margin-top:4px}
+    .card{background:var(--card);border-radius:0 0 16px 16px;padding:18px;border:1px solid #e5e7eb;border-top:0;box-shadow:0 20px 50px rgba(2,6,23,.06)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media (max-width:800px){.grid{grid-template-columns:1fr}}
+    .panel{border:1px solid #e5e7eb;border-radius:14px;padding:16px}
+    h3{font-size:16px;font-weight:900;color:#0b2546}
+    .muted{color:var(--muted);font-size:12px;margin-top:6px}
+    input{width:100%;padding:12px;border:2px solid #e6ebff;border-radius:10px;margin:12px 0 10px;background:#f8fafc}
+    input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,.12);background:#fff}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:12px;border:0;font-weight:900;cursor:pointer;transition:.18s}
+    .btn:focus{outline:none;box-shadow:0 0 0 4px rgba(37,99,235,.12)}
+    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--primary2));color:#fff;width:100%}
+    .btn-secondary{background:#fff;color:var(--primary);border:2px solid #e6ebff;width:100%}
+    .btn:hover{transform:translateY(-2px)}
+    .err{margin-top:8px;color:#ef4444;font-weight:700;min-height:20px}
+    .ok{margin-top:8px;color:var(--ok);font-weight:800}
+    .foot{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+    .chip{border:2px solid #e5e7eb;border-radius:999px;padding:6px 10px;font-size:12px;color:#334155;background:#fff}
+    .note{margin-top:10px;font-size:12px;color:#6b7280}
+    .code{font-family:ui-monospace,Consolas,monospace;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:2px 6px}
   </style>
 </head>
 <body>
-
-<!-- ===== Gate Overlay: Left=Password, Right=Bypass ===== -->
-<div class="gate" id="gate">
-  <div class="gate-inner">
-    <!-- Left: Password -->
-    <div class="gate-card">
-      <div class="gate-title">🔒 पासवर्ड से प्रवेश</div>
-      <div class="gate-note">सही पासवर्ड डालें, Registration UI अनलॉक होगा (हर बार पूछा जाएगा)</div>
-      <input type="password" id="pwd" class="pwd" placeholder="Password" maxlength="20" autocomplete="new-password" />
-      <button class="btn-unlock" onclick="unlock()">Unlock</button>
-      <div class="gate-note" style="margin-top:8px">Hint: अपने Teacher से पूछें (उदा. <em>quizideal</em>)</div>
+  <div class="wrap">
+    <div class="head">
+      <div class="title">🎓 Advanced Diploma In Computer Application Quiz</div>
+      <div class="sub">Ideal Computer Centre — Registration gateway (GitHub → Apps Script)</div>
     </div>
 
-    <!-- Right: Bypass -->
-    <div class="gate-card">
-      <div class="gate-title">🚀 Without Password</div>
-      <div class="gate-note">सीधे कार्यरत पेज पर जाएँ — कोई लॉगिन या रजिस्ट्रेशन नहीं</div>
-      <button class="btn-unlock" onclick="location.href='https://anilkumaricc.github.io/'">Bypass Quiz</button>
-      <button class="btn-bypass" onclick="window.open('https://anilkumaricc.github.io/','_blank')">Open in New Tab</button>
-    </div>
-  </div>
-</div>
-
-<div class="wrap" id="mainUI" style="display:none">
-  <div class="card">
-    <!-- Header -->
-    <div class="header">
-      <div class="h-left">
-        <button class="btn-link" onclick="location.href='review.html'">📋 Review</button>
-      </div>
-
-      <div class="h-center">
-        <div class="title">🎓 ADCA Quiz Registration</div>
-        <div class="sub">Ideal Computer Centre — Hatta, Chainpur, Kaimur (Bihar)</div>
-      </div>
-
-      <div class="h-right">
-        <button class="btn-link" onclick="location.href='dashboard.html'">📊 Dashboard</button>
-        <button class="btn-help" title="Help" onclick="openHelp()">?</button>
-      </div>
-    </div>
-
-    <!-- Body -->
-    <div class="body">
-      <div class="cols">
-        <!-- Left: Form -->
-        <div class="panel">
-          <div class="sec-title">
-            <h3>📝 Student Details</h3>
-            <span class="muted">Auto-fill बंद है • सभी फ़ील्ड validate होंगे</span>
-          </div>
-
-          <form id="regForm" autocomplete="off" onsubmit="submitForm(event)">
-            <div class="grid2">
-              <div>
-                <label for="studentName">Name (Student Full name) <span class="req">*</span></label>
-                <input id="studentName" name="studentName" type="text" minlength="5" required
-                       placeholder="Student Full Name" inputmode="text" autocomplete="new-password"
-                       oninvalid="this.setCustomValidity('कृपया पूरा नाम (≥ 5 अक्षर)')" oninput="this.setCustomValidity('')"/>
-              </div>
-              <div>
-                <label for="fatherName">Father's Name <span class="req">*</span></label>
-                <input id="fatherName" name="fatherName" type="text" minlength="5" required
-                       placeholder="Father's Full Name" autocomplete="new-password"
-                       oninvalid="this.setCustomValidity('कृपया पिता का पूरा नाम (≥ 5 अक्षर)')" oninput="this.setCustomValidity('')"/>
-              </div>
-              <div>
-                <label for="roll">Roll (3 Digit Like 001) <span class="req">*</span></label>
-                <input id="roll" name="roll" type="text" pattern="^[0-9]{3}$" maxlength="3" required
-                       placeholder="e.g., 001" inputmode="numeric" autocomplete="new-password"
-                       oninvalid="this.setCustomValidity('3 अंकों का Roll लिखें (उदा. 001)')" oninput="this.setCustomValidity('')"/>
-              </div>
-              <div>
-                <label for="mobile">Mobile (10 Digits; start 6–9) <span class="req">*</span></label>
-                <input id="mobile" name="mobile" type="tel" pattern="^[6-9][0-9]{9}$" maxlength="10" required
-                       placeholder="e.g., 9876543210" inputmode="numeric" autocomplete="new-password"
-                       oninvalid="this.setCustomValidity('वैध 10 अंकों का मोबाइल (6–9 से शुरू)')" oninput="this.setCustomValidity('')"/>
-              </div>
-              <div>
-                <label for="series">Series <span class="req">*</span></label>
-                <select id="series" name="series" required onchange="populateSets()">
-                  <option value="">— चुनें —</option>
-                  <option value="Series_A">A • Computer Fundamentals</option>
-                  <option value="Series_B">B • Operating System</option>
-                  <option value="Series_C">C • MS Office</option>
-                  <option value="Series_D">D • LibreOffice</option>
-                  <option value="Series_E">E • Internet & Email</option>
-                  <option value="Series_F">F • CCC Course</option>
-                  <option value="Series_G">G • AI & Linux</option>
-                  <option value="Series_H">H • Tally & Accounting</option>
-                  <option value="Series_I">I • DTP Tools</option>
-                  <option value="Series_Z">Z • General Knowledge</option>
-                </select>
-              </div>
-              <div>
-                <label for="setNo">Set <span class="req">*</span></label>
-                <select id="setNo" name="setNo" required disabled>
-                  <option value="">— पहले Series चुनें —</option>
-                </select>
-              </div>
-              <div>
-                <label>PI (Automatic)</label>
-                <input id="pi" type="text" readonly placeholder="Auto" />
-              </div>
-              <div>
-                <label>—</label>
-                <div class="muted">सभी इनपुट सही हों तभी “Start Quiz” सक्रिय रहेगा।</div>
-              </div>
-            </div>
-
-            <div class="submit">
-              <button class="btn btn-primary" type="submit">🚀 Start Quiz</button>
-              <button class="btn-ghost" type="button" onclick="regForm.reset(); updatePI();">Reset</button>
-            </div>
-          </form>
-
-          <!-- Motivation (bilingual) -->
-          <div class="quote" id="motivationBox" aria-live="polite">
-            <div class="q-hi" id="qHi">“आज आप जो करते हैं, भविष्य उसी पर निर्भर करता है।”</div>
-            <div class="q-en" id="qEn">“The future depends on what you do today.”</div>
-            <div class="a" id="qAuth">— Mahatma Gandhi</div>
-          </div>
-        </div>
-
-        <!-- Right: Series & Sets (cards) -->
-        <div class="panel">
-          <div class="sec-title"><h3>📚 Series & Sets</h3></div>
-
-          <div class="series-grid">
-            <div class="series-card" onclick="pickSeries('Series_A')">
-              <div class="chip" style="background:#2563eb">A</div>
-              <div class="card-text">
-                <div class="subject">Computer Fundamentals</div>
-                <div class="setinfo">Sets: 001–020 • 20 Sets</div>
-              </div>
-            </div>
-            <div class="series-card" onclick="pickSeries('Series_B')">
-              <div class="chip" style="background:#16a34a">B</div>
-              <div class="card-text">
-                <div class="subject">Operating System</div>
-                <div class="setinfo">Sets: 021–040 • 20 Sets</div>
-              </div>
-            </div>
-            <div class="series-card" onclick="pickSeries('Series_C')">
-              <div class="chip" style="background:#ea580c">C</div>
-              <div class="card-text">
-                <div class="subject">MS Office</div>
-                <div class="setinfo">Sets: 041–080 • 40 Sets</div>
-              </div>
-            </div>
-            <div class="series-card" onclick="pickSeries('Series_D')">
-              <div class="chip" style="background:#a855f7">D</div>
-              <div class="card-text">
-                <div class="subject">LibreOffice</div>
-                <div class="setinfo">Sets: 081–105 • 25 Sets</div>
-              </div>
-            </div>
-            <div class="series-card" onclick="pickSeries('Series_E')">
-              <div class="chip" style="background:#0ea5e9">E</div>
-              <div class="card-text">
-                <div class="subject">Internet & Email</div>
-                <div class="setinfo">Sets: 106–120 • 15 Sets</div>
-              </div>
-            </div>
-            <div class="series-card" onclick="pickSeries('Series_F')">
-              <div class="chip" style="background:#e11d48">F</div>
-              <div class="card-text">
-                <div class="subject">CCC Course</div>
-                <div class="setinfo">Sets: 121–155 • 35 Sets</div>
-              </div>
-            </div>
-            <div class="series-card" onclick="pickSeries('Series_G')">
-              <div class="chip" style="background:#065f46">G</div>
-              <div class="card-text">
-                <div class="subject">AI & Linux</div>
-                <div class="setinfo">Sets: 156–170 • 15 Sets</div>
-              </div>
-            </div>
-            <div class="series-card" onclick="pickSeries('Series_H')">
-              <div class="chip" style="background:#7c3aed">H</div>
-              <div class="card-text">
-                <div class="subject">Tally & Accounting</div>
-                <div class="setinfo">Sets: 171–190 • 20 Sets</div>
-              </div>
-            </div>
-            <div class="series-card" onclick="pickSeries('Series_I')">
-              <div class="chip" style="background:#059669">I</div>
-              <div class="card-text">
-                <div class="subject">DTP Tools</div>
-                <div class="setinfo">Sets: 191–205 • 15 Sets</div>
-              </div>
-            </div>
-            <div class="series-card" onclick="pickSeries('Series_Z')">
-              <div class="chip" style="background:#111827">Z</div>
-              <div class="card-text">
-                <div class="subject">General Computer Knowledge</div>
-                <div class="setinfo">Sets: 001 • 1 Set</div>
-              </div>
-            </div>
-          </div>
-
+    <div class="card">
+      <div id="cfgError" class="panel" style="display:none">
+        <h3>⚠️ Config missing or invalid</h3>
+        <div class="muted" style="margin-top:6px">
+          कृपया सुनिश्चित करें कि <span class="code">config.js</span> उसी फ़ोल्डर में है और इसमें
+          <span class="code">window.ADCA.ENDPOINT</span> (Apps Script web app URL) मौजूद है।
         </div>
       </div>
+
+      <div id="mainGrid" class="grid" style="display:none">
+        <!-- LEFT: Password → Registration (Apps Script index.html) -->
+        <div class="panel">
+          <h3>🔒 Password → Registration Form</h3>
+          <div class="muted">सही पासवर्ड भरें — फिर Apps Script पर आपका <b>index.html</b> (Registration) खुलेगा।</div>
+          <input id="pwd" type="password" placeholder="Password" autocomplete="new-password" maxlength="32">
+          <button class="btn btn-primary" id="goBtn">Open Registration</button>
+          <div id="msg" class="err"></div>
+          <div class="note">पासवर्ड बदलना/देखना: <span class="code">config.js → REGISTRATION_PASSWORD</span></div>
+        </div>
+
+        <!-- RIGHT: Direct working page (Bypass) -->
+        <div class="panel">
+          <h3>🚀 Without Password (Direct)</h3>
+          <div class="muted">सीधे आपके public working page पर जाएँ — कोई login/registration नहीं।</div>
+          <button class="btn btn-secondary" id="bypassBtn">Open https://anilkumaricc.github.io/</button>
+          <div class="note">यह सिर्फ़ एक अलग public entry है — मुख्य डेटा Apps Script पर ही जाएगा।</div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div class="chip">Config via <span class="code" style="margin-left:6px">config.js</span></div>
+        <div class="chip">Endpoint: <span id="epChip" class="code" style="margin-left:6px">—</span></div>
+        <div class="chip">Route: <span id="rtChip" class="code" style="margin-left:6px">?action=ui</span></div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Help Modal -->
-<div class="gate" id="helpOverlay" style="display:none;background:rgba(3,7,18,.84)">
-  <div class="gate-card" style="max-width:700px;text-align:left">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <h2>❓ Registration Help</h2>
-      <button class="btn-bypass" onclick="closeHelp()">Close</button>
-    </div>
-    <ul style="margin-top:10px;line-height:1.6">
-      <li><strong>Name:</strong> पूरा छात्र का नाम (कम से कम 5 अक्षर)</li>
-      <li><strong>Father's Name:</strong> पिता का पूरा नाम (≥ 5 अक्षर)</li>
-      <li><strong>Roll:</strong> 3 अंकों में (उदा. 001)</li>
-      <li><strong>Mobile:</strong> 10 अंक, 6–9 से शुरू</li>
-      <li><strong>Series + Set:</strong> दाएँ कार्ड से Series चुनें, फिर Set dropdown auto भर जाएगा</li>
-      <li><strong>PI:</strong> अपने-आप बनेगा (SeriesLetter + Set3 + Roll3)</li>
-      <li><strong>Start Quiz:</strong> सब सही होने पर “Start Quiz” दबाएँ</li>
-    </ul>
-  </div>
-</div>
+  <!-- Load config.js from the same folder -->
+  <script src="config.js"></script>
+  <script>
+    (function(){
+      // ---- Read config (must be in the same folder) ----
+      const cfg = (window.ADCA || {});
+      const endpoint = (cfg.ENDPOINT || '').trim();            // required
+      const requirePw = !!cfg.REQUIRE_PASSWORD;                // true/false
+      const regPw = (cfg.REGISTRATION_PASSWORD || '').trim();  // e.g., "ICC2026"
+      const openRoute = (cfg.OPEN_ROUTE_UI ?? '?action=ui');   // allow override
 
-<script>
-  // ====== ALWAYS ask password on load (no persistence) ======
-  window.addEventListener("DOMContentLoaded", () => {
-    sessionStorage.removeItem('quizUnlocked');
-  });
+      // UI refs
+      const cfgError = document.getElementById('cfgError');
+      const grid     = document.getElementById('mainGrid');
+      const goBtn    = document.getElementById('goBtn');
+      const bypass   = document.getElementById('bypassBtn');
+      const msg      = document.getElementById('msg');
+      const epChip   = document.getElementById('epChip');
+      const rtChip   = document.getElementById('rtChip');
 
-  // ====== Allowed passwords (lowercase compare) ======
-  const VALID_PASSWORDS = ['hatta2025','quizideal','adca2025'];
+      // Validate config
+      if (!endpoint || !/^https:\/\/script\.google\.com\/macros\/s\//.test(endpoint)) {
+        cfgError.style.display = 'block';
+        return;
+      }
+      epChip.textContent = endpoint;
+      rtChip.textContent = String(openRoute || '(root)');
 
-  function unlock(){
-    const val = (document.getElementById('pwd').value||'').trim().toLowerCase();
-    if(VALID_PASSWORDS.includes(val)){
-      document.getElementById('gate').style.display='none';
-      document.getElementById('mainUI').style.display='block';
-    }else{
-      document.getElementById('pwd').value='';
-      alert('गलत पासवर्ड');
-    }
-  }
+      // Show main grid
+      grid.style.display = 'grid';
 
-  function openHelp(){ document.getElementById('helpOverlay').style.display='flex'; }
-  function closeHelp(){ document.getElementById('helpOverlay').style.display='none'; }
-
-  // ===== Series -> Sets map =====
-  const setsMap = {
-    'Series_A': Array.from({length:20},(_,i)=>`Set${String(1+i).padStart(3,'0')}`),
-    'Series_B': Array.from({length:20},(_,i)=>`Set${String(21+i).padStart(3,'0')}`),
-    'Series_C': Array.from({length:40},(_,i)=>`Set${String(41+i).padStart(3,'0')}`),
-    'Series_D': Array.from({length:25},(_,i)=>`Set${String(81+i).padStart(3,'0')}`),
-    'Series_E': Array.from({length:15},(_,i)=>`Set${String(106+i).padStart(3,'0')}`),
-    'Series_F': Array.from({length:35},(_,i)=>`Set${String(121+i).padStart(3,'0')}`),
-    'Series_G': Array.from({length:15},(_,i)=>`Set${String(156+i).padStart(3,'0')}`),
-    'Series_H': Array.from({length:20},(_,i)=>`Set${String(171+i).padStart(3,'0')}`),
-    'Series_I': Array.from({length:15},(_,i)=>`Set${String(191+i).padStart(3,'0')}`),
-    'Series_Z': ['Set001']
-  };
-
-  const seriesEl = document.getElementById('series');
-  const setEl    = document.getElementById('setNo');
-
-  function pickSeries(key){
-    seriesEl.value = key;
-    populateSets();
-    seriesEl.scrollIntoView({behavior:'smooth',block:'center'});
-  }
-
-  function populateSets(){
-    const key = seriesEl.value;
-    setEl.innerHTML = '';
-    setEl.disabled = true;
-
-    if(key && setsMap[key]){
-      const list = setsMap[key];
-      setEl.disabled = false;
-      list.forEach(s=>{
-        const o = document.createElement('option');
-        o.value = s; o.textContent = s; setEl.appendChild(o);
+      // Left: Password → open Apps Script index.html (registration)
+      goBtn.addEventListener('click', () => {
+        msg.textContent = '';
+        const v = (document.getElementById('pwd').value || '').trim();
+        if (requirePw) {
+          if (!v) { msg.textContent = 'Password आवश्यक है'; return; }
+          if (regPw && v !== regPw) { msg.textContent = 'गलत Password'; return; }
+        }
+        // Redirect to Apps Script index.html route
+        const route = String(openRoute || '?action=ui');
+        const url = endpoint + (route.startsWith('?') || route.startsWith('&') ? route : ('?' + route));
+        window.location.href = url;
       });
-    }
-    updatePI();
-  }
 
-  function seriesLetter(seriesKey){
-    if(!seriesKey) return '';
-    const p = String(seriesKey).split('_');
-    return (p[1]||'').slice(0,1).toUpperCase();
-  }
-  function set3(setVal){
-    if(!setVal) return '000';
-    const m = String(setVal).match(/(\d{1,3})$/);
-    return String(m?m[1]:setVal).padStart(3,'0');
-  }
-  function roll3(r){
-    return String(r||'').replace(/\D/g,'').slice(-3).padStart(3,'0');
-  }
-  function updatePI(){
-    const s = seriesLetter(seriesEl.value);
-    const st= set3(setEl.value);
-    const r = roll3(document.getElementById('roll').value);
-    const pi = (s? s:'') + (st? st:'') + (r? r:'');
-    document.getElementById('pi').value = pi || '';
-  }
-
-  document.getElementById('roll')?.addEventListener('input', updatePI);
-  setEl?.addEventListener('change', updatePI);
-
-  // ===== Motivation quotes (you can extend to 205) =====
-  const QUOTES = [
-    {hi:"आज आप जो करते हैं, भविष्य उसी पर निर्भर करता है।", en:"The future depends on what you do today.", a:"Mahatma Gandhi"},
-    {hi:"उठो, जागो और लक्ष्य प्राप्ति तक मत रुको।", en:"Arise, awake and stop not till the goal is reached.", a:"Swami Vivekananda"},
-    {hi:"अनुशासन लक्ष्य और उपलब्धि के बीच की सेतु है।", en:"Discipline is the bridge between goals and accomplishment.", a:"Jim Rohn"},
-    {hi:"बड़े सपने देखो; सपने विचार बनते हैं और विचार कर्म में बदलते हैं।", en:"Dreams transform into thoughts and thoughts result in action.", a:"A. P. J. Abdul Kalam"},
-    {hi:"जब तक काम हो नहीं जाता, वह असंभव लगता है।", en:"It always seems impossible until it’s done.", a:"Nelson Mandela"},
-    {hi:"अच्छी शुरुआत आधा काम पूरा।", en:"Well begun is half done.", a:"Aristotle"},
-    {hi:"जब कोई नहीं देख रहा होता, तब भी सही काम करना ही गुणवत्ता है।", en:"Quality means doing it right when no one is looking.", a:"Henry Ford"},
-    {hi:"कर्म ही सफलता की बुनियादी कुंजी है।", en:"Action is the foundational key to all success.", a:"Pablo Picasso"},
-    {hi:"यदि भविष्य परिभाषित करना है तो अतीत का अध्ययन करो।", en:"Study the past if you would define the future.", a:"Confucius"},
-    {hi:"सफलता छोटे-छोटे प्रयासों का योग है जो रोज़ किए जाते हैं।", en:"Success is the sum of small efforts, repeated day in and day out.", a:"Robert Collier"}
-  ];
-  function showQuote(){
-    const i = Math.floor(Math.random() * QUOTES.length);
-    const {hi,en,a} = QUOTES[i] || QUOTES[0];
-    document.getElementById('qHi')?.textContent = `“${hi}”`;
-    document.getElementById('qEn')?.textContent = `“${en}”`;
-    document.getElementById('qAuth')?.textContent = `— ${a}`;
-  }
-  showQuote();
-
-  // === Apps Script Web App ENDPOINT (CHANGE HERE if ever needed) ===
-  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbyC_kGdWjTuMOm0-blHhqjyn4mq_iJKkhTYr6zMj_NMVQd0EZgcgfM2ztjNWCoRW3q2/exec';
-
-  // ===== Submit => save to localStorage, then open Apps Script quiz UI =====
-  function submitForm(e){
-    e.preventDefault();
-
-    const name   = document.getElementById('studentName').value.trim();
-    const father = document.getElementById('fatherName').value.trim();
-    const roll   = document.getElementById('roll').value.trim();
-    const mobile = document.getElementById('mobile').value.trim();
-    const series = seriesEl.value;
-    const setNum = setEl.value;
-
-    if(name.length < 5){ alert('Name कम से कम 5 अक्षरों का होना चाहिए'); return; }
-    if(father.length < 5){ alert('Father\'s Name कम से कम 5 अक्षरों का होना चाहिए'); return; }
-    if(!/^\d{3}$/.test(roll)){ alert('Roll 3 digits (उदा. 001) होना चाहिए'); return; }
-    if(!/^[6-9]\d{9}$/.test(mobile)){ alert('वैध मोबाइल (10 digit, 6–9 से शुरू) लिखें'); return; }
-    if(!series || !setNum){ alert('Series और Set चुनें'); return; }
-
-    const studentData = {
-      studentName: name,
-      fatherName : father,
-      rollNumber : roll,
-      mobile     : mobile,
-      series     : series,
-      setNumber  : setNum,
-      previousHWCompleted: false
-    };
-
-    localStorage.setItem('studentData', JSON.stringify(studentData));
-    // 👉 Apps Script के quiz UI पर जाएँ (router via Code.gs -> doGet ?action=quiz)
-    location.href = ENDPOINT + '?action=quiz';
-  }
-
-  // Force disable autofill/spell suggestions
-  ['studentName','fatherName','roll','mobile'].forEach(id=>{
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.setAttribute('autocomplete','new-password');
-    el.setAttribute('autocapitalize','off');
-    el.setAttribute('autocorrect','off');
-    el.setAttribute('spellcheck','false');
-  });
-</script>
+      // Right: direct public page
+      bypass.addEventListener('click', () => {
+        window.location.href = 'https://anilkumaricc.github.io/';
+      });
+    })();
+  </script>
 </body>
 </html>
 <!-- === END: Quiz2026.html === -->
