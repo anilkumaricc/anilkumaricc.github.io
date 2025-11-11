@@ -1,137 +1,102 @@
-<!-- === START: Quiz2026.html (GitHub landing) === -->
 <!doctype html>
 <html lang="hi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>🎓 Advanced Diploma In Computer Application Quiz</title>
-  <style>
-    :root{
-      --primary:#2563eb; --primary2:#1e40af; --ok:#10b981; --warn:#f59e0b;
-      --bg:#f3f5ff; --card:#ffffff; --muted:#64748b;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(135deg,#e9eeff,#fff7ec);min-height:100vh;color:#0f172a;display:grid;place-items:center;padding:18px}
-    .wrap{max-width:960px;width:100%}
-    .head{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border-radius:16px 16px 0 0;padding:16px 18px;box-shadow:0 12px 30px rgba(2,6,23,.12)}
-    .title{font-weight:900;font-size:18px}
-    .sub{opacity:.95;font-size:12px;margin-top:4px}
-    .card{background:var(--card);border-radius:0 0 16px 16px;padding:18px;border:1px solid #e5e7eb;border-top:0;box-shadow:0 20px 50px rgba(2,6,23,.06)}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    @media (max-width:800px){.grid{grid-template-columns:1fr}}
-    .panel{border:1px solid #e5e7eb;border-radius:14px;padding:16px}
-    h3{font-size:16px;font-weight:900;color:#0b2546}
-    .muted{color:var(--muted);font-size:12px;margin-top:6px}
-    input{width:100%;padding:12px;border:2px solid #e6ebff;border-radius:10px;margin:12px 0 10px;background:#f8fafc}
-    input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,.12);background:#fff}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:12px;border:0;font-weight:900;cursor:pointer;transition:.18s}
-    .btn:focus{outline:none;box-shadow:0 0 0 4px rgba(37,99,235,.12)}
-    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--primary2));color:#fff;width:100%}
-    .btn-secondary{background:#fff;color:var(--primary);border:2px solid #e6ebff;width:100%}
-    .btn:hover{transform:translateY(-2px)}
-    .err{margin-top:8px;color:#ef4444;font-weight:700;min-height:20px}
-    .ok{margin-top:8px;color:var(--ok);font-weight:800}
-    .foot{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-    .chip{border:2px solid #e5e7eb;border-radius:999px;padding:6px 10px;font-size:12px;color:#334155;background:#fff}
-    .note{margin-top:10px;font-size:12px;color:#6b7280}
-    .code{font-family:ui-monospace,Consolas,monospace;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:2px 6px}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🎓 Advanced Diploma In Computer Application Quiz</title>
+<link rel="preconnect" href="https://script.google.com">
+<style>
+  :root{--bg:#0b1220;--card:#0f172a;--muted:#94a3b8;--ring:#1e293b;--pri:#38bdf8;--pri2:#06b6d4;--ok:#10b981}
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:
+    radial-gradient(1200px 1200px at 10% -10%, rgba(56,189,248,.08), transparent 60%),
+    radial-gradient(800px 800px at 100% 10%, rgba(6,182,212,.08), transparent 60%),
+    var(--bg); color:#e5e7eb; display:grid; place-items:center}
+  .wrap{max-width:980px; width:94%; background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+        border:1px solid #1f2937; border-radius:18px; backdrop-filter: blur(6px);
+        box-shadow:0 30px 80px rgba(0,0,0,.35)}
+  .head{padding:22px 24px; border-bottom:1px solid #1f2937; display:flex; gap:14px; align-items:center; justify-content:space-between}
+  .brand{font-weight:900; letter-spacing:.4px}
+  .muted{color:var(--muted)}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:0; min-height:320px}
+  @media (max-width:800px){ .grid{grid-template-columns:1fr} }
+  .col{padding:24px}
+  .col + .col{border-left:1px solid #1f2937}
+  @media (max-width:800px){ .col + .col{border-left:0; border-top:1px solid #1f2937} }
+
+  .title{font-size:22px; font-weight:900; display:flex; align-items:center; gap:10px}
+  .pad{margin-top:12px}
+  .box{background:rgba(15,23,42,.6); border:1px solid var(--ring); border-radius:14px; padding:12px 14px}
+  input{width:100%; background:#0b1220; border:1.6px solid #233047; color:#e5e7eb; border-radius:12px; padding:12px 14px; outline:none}
+  input:focus{border-color:#2aa3d5; box-shadow:0 0 0 4px rgba(56,189,248,.2)}
+  .row{display:flex; gap:12px; align-items:center; margin-top:12px}
+  .btn{border:0; padding:14px 16px; border-radius:12px; font-weight:900; cursor:pointer; transition:.18s}
+  .btn:active{transform:translateY(1px)}
+  .btn-pri{background:linear-gradient(90deg,var(--pri),var(--pri2)); color:#05222d}
+  .btn-pri:hover{filter:brightness(1.05)}
+  .btn-ghost{background:#0b1220; color:#8abbd5; border:1.6px solid #233047}
+  .note{font-size:12px; color:var(--muted); margin-top:8px}
+  .center{display:flex; align-items:center; gap:12px}
+  .big{font-size:15px}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="head">
-      <div class="title">🎓 Advanced Diploma In Computer Application Quiz</div>
-      <div class="sub">Ideal Computer Centre — Registration gateway (GitHub → Apps Script)</div>
-    </div>
-
-    <div class="card">
-      <div id="cfgError" class="panel" style="display:none">
-        <h3>⚠️ Config missing or invalid</h3>
-        <div class="muted" style="margin-top:6px">
-          कृपया सुनिश्चित करें कि <span class="code">config.js</span> उसी फ़ोल्डर में है और इसमें
-          <span class="code">window.ADCA.ENDPOINT</span> (Apps Script web app URL) मौजूद है।
-        </div>
-      </div>
-
-      <div id="mainGrid" class="grid" style="display:none">
-        <!-- LEFT: Password → Registration (Apps Script index.html) -->
-        <div class="panel">
-          <h3>🔒 Password → Registration Form</h3>
-          <div class="muted">सही पासवर्ड भरें — फिर Apps Script पर आपका <b>index.html</b> (Registration) खुलेगा।</div>
-          <input id="pwd" type="password" placeholder="Password" autocomplete="new-password" maxlength="32">
-          <button class="btn btn-primary" id="goBtn">Open Registration</button>
-          <div id="msg" class="err"></div>
-          <div class="note">पासवर्ड बदलना/देखना: <span class="code">config.js → REGISTRATION_PASSWORD</span></div>
-        </div>
-
-        <!-- RIGHT: Direct working page (Bypass) -->
-        <div class="panel">
-          <h3>🚀 Without Password (Direct)</h3>
-          <div class="muted">सीधे आपके public working page पर जाएँ — कोई login/registration नहीं।</div>
-          <button class="btn btn-secondary" id="bypassBtn">Open https://anilkumaricc.github.io/</button>
-          <div class="note">यह सिर्फ़ एक अलग public entry है — मुख्य डेटा Apps Script पर ही जाएगा।</div>
-        </div>
-      </div>
-
-      <div class="foot">
-        <div class="chip">Config via <span class="code" style="margin-left:6px">config.js</span></div>
-        <div class="chip">Endpoint: <span id="epChip" class="code" style="margin-left:6px">—</span></div>
-        <div class="chip">Route: <span id="rtChip" class="code" style="margin-left:6px">?action=ui</span></div>
-      </div>
-    </div>
+<div class="wrap">
+  <div class="head">
+    <div class="brand">🎓 Advanced Diploma In Computer Application Quiz</div>
+    <div class="muted">Ideal Computer Centre — Hatta • Chainpur • Kaimur</div>
   </div>
 
-  <!-- Load config.js from the same folder -->
-  <script src="config.js"></script>
-  <script>
-    (function(){
-      // ---- Read config (must be in the same folder) ----
-      const cfg = (window.ADCA || {});
-      const endpoint = (cfg.ENDPOINT || '').trim();            // required
-      const requirePw = !!cfg.REQUIRE_PASSWORD;                // true/false
-      const regPw = (cfg.REGISTRATION_PASSWORD || '').trim();  // e.g., "ICC2026"
-      const openRoute = (cfg.OPEN_ROUTE_UI ?? '?action=ui');   // allow override
+  <div class="grid">
+    <!-- Left: Password path (opens Apps Script index.html) -->
+    <div class="col">
+      <div class="title">🔒 Access Required</div>
+      <div class="pad muted">Teacher/Admin students: पासवर्ड डालकर पूरा टेस्ट खोलें</div>
+      <div class="box pad">
+        <input id="pwd" type="password" placeholder="Enter password (e.g., quizideal)" autocomplete="new-password">
+      </div>
+      <div class="row">
+        <button class="btn btn-pri big" onclick="openIndex()">Unlock & Continue</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('pwd').value=''">Clear</button>
+      </div>
+      <div class="note">Hint: अपने Teacher से पूछें</div>
+    </div>
 
-      // UI refs
-      const cfgError = document.getElementById('cfgError');
-      const grid     = document.getElementById('mainGrid');
-      const goBtn    = document.getElementById('goBtn');
-      const bypass   = document.getElementById('bypassBtn');
-      const msg      = document.getElementById('msg');
-      const epChip   = document.getElementById('epChip');
-      const rtChip   = document.getElementById('rtChip');
+    <!-- Right: Bypass practice -->
+    <div class="col">
+      <div class="title">🔓 Without Password</div>
+      <div class="pad muted">यदि पासवर्ड नहीं है — practice/test चलाएँ (no PII submit)</div>
+      <div class="row">
+        <button class="btn btn-pri big" onclick="openBypass()">Bypass Quiz — Open Practice</button>
+      </div>
+      <div class="note">Bypass से basic demo/practice खुलेगा — यह सीधे GitHub Hosted ‘Quiz2026.html’/home चलाता है।</div>
+    </div>
+  </div>
+</div>
 
-      // Validate config
-      if (!endpoint || !/^https:\/\/script\.google\.com\/macros\/s\//.test(endpoint)) {
-        cfgError.style.display = 'block';
-        return;
-      }
-      epChip.textContent = endpoint;
-      rtChip.textContent = String(openRoute || '(root)');
+<script>
+  // === CONFIG ===
+  // Apps Script deployment URL (आपका latest)
+  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbyC_kGdWjTuMOm0-blHhqjyn4mq_iJKkhTYr6zMj_NMVQd0EZgcgfM2ztjNWCoRW3q2/exec';
+  // Acceptable passwords (client-side gate; असली अधिकार Apps Script पर रहते हैं)
+  const VALID_PASSWORDS = ['hatta2025','quizideal','adca2025','ICC2026'];
 
-      // Show main grid
-      grid.style.display = 'grid';
+  // Left button -> Apps Script index.html
+  function openIndex(){
+    const v = (document.getElementById('pwd').value || '').trim().toLowerCase();
+    if(!VALID_PASSWORDS.includes(v)){
+      alert('गलत पासवर्ड'); return;
+    }
+    // sessionStorage flag (index.html चाहे तो चेक कर ले)
+    try{ sessionStorage.setItem('quizUnlocked','1'); }catch(_){}
+    // Apps Script index page (doGet default -> index file)
+    window.location.href = ENDPOINT + '?action=index';
+  }
 
-      // Left: Password → open Apps Script index.html (registration)
-      goBtn.addEventListener('click', () => {
-        msg.textContent = '';
-        const v = (document.getElementById('pwd').value || '').trim();
-        if (requirePw) {
-          if (!v) { msg.textContent = 'Password आवश्यक है'; return; }
-          if (regPw && v !== regPw) { msg.textContent = 'गलत Password'; return; }
-        }
-        // Redirect to Apps Script index.html route
-        const route = String(openRoute || '?action=ui');
-        const url = endpoint + (route.startsWith('?') || route.startsWith('&') ? route : ('?' + route));
-        window.location.href = url;
-      });
-
-      // Right: direct public page
-      bypass.addEventListener('click', () => {
-        window.location.href = 'https://anilkumaricc.github.io/';
-      });
-    })();
-  </script>
+  // Right button -> your GitHub site home
+  function openBypass(){
+    window.location.href = 'https://anilkumaricc.github.io/';
+  }
+</script>
 </body>
 </html>
-<!-- === END: Quiz2026.html === -->
