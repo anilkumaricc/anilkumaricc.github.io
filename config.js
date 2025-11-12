@@ -1,20 +1,14 @@
-// config.js  —  KEEP THIS FILE PURE JS (no <script> tags!)
+// config.js
 window.ADCA = {
-  // === Apps Script Web App Deployment URL (आपने जो latest दिया है) ===
-  ENDPOINT: "https://script.google.com/macros/s/AKfycbyC_kGdWjTuMOm0-blHhqjyn4mq_iJKkhTYr6zMj_NMVQd0EZgcgfM2ztjNWCoRW3q2/exec",
-
-  // === Public submit key (PRIMARY) — client में रहेगा ===
-  PRIMARY_KEY: "primary_Ea7f4c2b",
-
-  // === Optional UI flags ===
-  REQUIRE_PASSWORD: true,
-  REGISTRATION_PASSWORD: "ICC2026",
-
-  // === Questions source (अभी Sheet API नहीं चाहिए तो false रखें) ===
-  USE_SHEET_QUESTIONS: false,
-  FALLBACK_BASE: "", // e.g., "https://<username>.github.io/<repo>/sets"
-
-  // === Misc (UI hints only) ===
-  QUESTION_TIME_SECONDS: 60,
-  DUP_WINDOW_HINT_MIN: 3
+  ENDPOINT: "https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxxxxxxx/exec",
+  PRIMARYKEY: "primaryEa7f4c2b",
+  ADMINKEY: "admin83c1d",
+  USE_SHEET_QUESTIONS: true,    // true => Sheet API, false => JSON files
+  JSON_PATHS: {
+    MAIN: (series, set) => `sets/Series_${series}_Set${String(set).padStart(3,"0")}.json`,
+    HW:   (series, set) => `hw/HW_Series_${series}_Set${String(set).padStart(3,"0")}.json`,
+    CW:   (series, set) => `hw/CW_Series_${series}_Set${String(set).padStart(3,"0")}.json`
+  },
+  TOKEN_TTL_SEC: 600,
+  DUP_WINDOW_MIN: 3
 };
