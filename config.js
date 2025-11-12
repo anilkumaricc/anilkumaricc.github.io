@@ -2,8 +2,8 @@
 window.ADCA = {
   // Set your /exec Web App URL here
   ENDPOINT: "https://script.google.com/macros/s/AKfycbyC_kGdWjTuMOm0-blHhqjyn4mq_iJKkhTYr6zMj_NMVQd0EZgcgfM2ztjNWCoRW3q2/exec",
-  PRIMARYKEY: "primaryEa7f4c2b",
-  ADMINKEY: "admin83c1d",
+  PRIMARYKEY: "primary_Ea7f4c2b",
+  ADMINKEY: "admin_83c1d",
 
   // Question source: true => Sheet API; false => JSON files (fallback)
   USE_SHEET_QUESTIONS: true,
@@ -19,3 +19,4 @@ window.ADCA = {
   TOKEN_TTL_SEC: 600,
   DUP_WINDOW_MIN: 3
 };
+
