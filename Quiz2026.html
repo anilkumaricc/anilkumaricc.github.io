@@ -50,74 +50,91 @@
     <div class="hint">Note: This is a convenience gate. For strong security store passwords server-side.</div>
   </div>
 
+<!-- include config.js BEFORE main script -->
 <script src="config.js"></script>
+
 <script>
 /*
-  Behavior:
-  - Validates password client-side against allowed list
-  - On success: redirects browser to Apps Script webapp URL from config.js
-  - We also add optional localStorage pass-through of registration (if present)
+  FINAL working script for Quiz2026.html
+  - Uses window.ADCA.ENDPOINT from config.js
+  - Single source of truth for endpoint
+  - Single, clear password check and redirect flow
+  - Good UX messages and Enter-key support
 */
 
-const VALID_PASSWORDS = ['hatta2025','quizideal','adca2025'];
+(function(){
+  // Allowed passwords (client-side convenience). Keep server-side checks for real security.
+  const VALID_PASSWORDS = ['hatta2025','quizideal','adca2025','ICC2026'];
 
-const unlockBtn = document.getElementById('unlockBtn');
-const clearBtn = document.getElementById('clearBtn');
-const pwdInput = document.getElementById('pwd');
-const fb = document.getElementById('feedback');
+  // Read endpoint from config.js (window.ADCA.ENDPOINT). Fallback shows helpful error.
+  const ENDPOINT = (window.ADCA && window.ADCA.ENDPOINT) ? window.ADCA.ENDPOINT : null;
 
-function showMessage(msg, ok=true){
-  fb.textContent = msg;
-  fb.style.color = ok ? '#b6ffcd' : '#ffb4b4';
-}
+  const unlockBtn = document.getElementById('unlockBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const pwdInput = document.getElementById('pwd');
+  const fb = document.getElementById('feedback');
 
-function clearMessage(){
-  fb.textContent = '';
-}
+  function showMessage(msg, ok=true){
+    fb.textContent = msg;
+    fb.style.color = ok ? '#b6ffcd' : '#ffb4b4';
+  }
 
-clearBtn.addEventListener('click', ()=> {
-  pwdInput.value = '';
-  pwdInput.focus();
-  clearMessage();
-});
+  function clearMessage(){
+    fb.textContent = '';
+  }
 
-pwdInput.addEventListener('keydown', (e)=> {
-  if(e.key === 'Enter') unlockBtn.click();
-});
-
-unlockBtn.addEventListener('click', ()=> {
-  const v = (pwdInput.value || '').trim();
-  if(!v){ showMessage('Please enter password', false); pwdInput.focus(); return; }
-  if(!VALID_PASSWORDS.includes(v)){
-    showMessage('गलत पासवर्ड — दुबारा कोशिश करें', false);
+  // Clear button
+  clearBtn.addEventListener('click', ()=> {
+    pwdInput.value = '';
     pwdInput.focus();
-    return;
-  }
+    clearMessage();
+  });
 
-  showMessage('Password accepted — Redirecting...', true);
+  // Enter key submits
+  pwdInput.addEventListener('keydown', (e)=> {
+    if(e.key === 'Enter') unlockBtn.click();
+  });
 
-  try{ sessionStorage.setItem('quizUnlocked', '1'); }catch(e){}
+  // Main unlock handler
+  unlockBtn.addEventListener('click', ()=> {
+    const v = (pwdInput.value || '').trim();
+    if(!v){
+      showMessage('Please enter password', false);
+      pwdInput.focus();
+      return;
+    }
+    // Client-side password check
+    if(!VALID_PASSWORDS.includes(v.toLowerCase())){
+      showMessage('गलत पासवर्ड — दुबारा कोशिश करें', false);
+      pwdInput.focus();
+      return;
+    }
 
-  // Determine destination URL from config.js (window.ADCA.INDEX_WEBAPP_URL)
-  const indexUrl = (window.ADCA && window.ADCA.INDEX_WEBAPP_URL) ? window.ADCA.INDEX_WEBAPP_URL : null;
-  if(!indexUrl){
-    showMessage('Server URL not configured. Configure INDEX_WEBAPP_URL in config.js', false);
-    return;
-  }
+    // Ensure endpoint configured
+    if(!ENDPOINT){
+      showMessage('Server URL not configured. Configure ENDPOINT in config.js', false);
+      return;
+    }
 
-  // Optional: pass saved registration details (if present) as query params
-  const params = new URLSearchParams();
-  try{
-    const reg = JSON.parse(localStorage.getItem('ADCA_REG') || '{}');
-    if(reg.pi) params.set('pi', reg.pi);
-    if(reg.roll) params.set('roll', reg.roll);
-  }catch(e){}
+    showMessage('Password accepted — Redirecting...', true);
 
-  const dest = params.toString() ? (indexUrl + '?' + params.toString()) : indexUrl;
+    // optional session marker (Index page can consult)
+    try{ sessionStorage.setItem('quizUnlocked', '1'); }catch(e){}
 
-  // small delay for UX
-  setTimeout(()=> { location.href = dest; }, 300);
-});
+    // Optional: pass saved registration details (if present) as query params
+    const params = new URLSearchParams();
+    try{
+      const reg = JSON.parse(localStorage.getItem('ADCA_REG') || '{}');
+      if(reg.pi) params.set('pi', reg.pi);
+      if(reg.roll) params.set('roll', reg.roll);
+    }catch(e){}
+
+    const dest = params.toString() ? (ENDPOINT + '?' + params.toString()) : ENDPOINT;
+
+    // small delay for UX
+    setTimeout(()=> { window.location.href = dest; }, 250);
+  });
+})();
 </script>
 </body>
 </html>
