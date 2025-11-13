@@ -1,102 +1,123 @@
+<!-- FILE: Quiz2026.html
+     Place this exactly as-is on your GitHub Pages (https://anilkumaricc.github.io/Quiz2026.html).
+     It will ask for password and then redirect to the Apps Script webapp URL defined in config.js.
+-->
 <!doctype html>
 <html lang="hi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>🎓 Advanced Diploma In Computer Application Quiz</title>
-<link rel="preconnect" href="https://script.google.com">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quiz — Unlock</title>
+<link rel="icon" href="data:," />
 <style>
-  :root{--bg:#0b1220;--card:#0f172a;--muted:#94a3b8;--ring:#1e293b;--pri:#38bdf8;--pri2:#06b6d4;--ok:#10b981}
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:
-    radial-gradient(1200px 1200px at 10% -10%, rgba(56,189,248,.08), transparent 60%),
-    radial-gradient(800px 800px at 100% 10%, rgba(6,182,212,.08), transparent 60%),
-    var(--bg); color:#e5e7eb; display:grid; place-items:center}
-  .wrap{max-width:980px; width:94%; background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
-        border:1px solid #1f2937; border-radius:18px; backdrop-filter: blur(6px);
-        box-shadow:0 30px 80px rgba(0,0,0,.35)}
-  .head{padding:22px 24px; border-bottom:1px solid #1f2937; display:flex; gap:14px; align-items:center; justify-content:space-between}
-  .brand{font-weight:900; letter-spacing:.4px}
-  .muted{color:var(--muted)}
-  .grid{display:grid; grid-template-columns:1fr 1fr; gap:0; min-height:320px}
-  @media (max-width:800px){ .grid{grid-template-columns:1fr} }
-  .col{padding:24px}
-  .col + .col{border-left:1px solid #1f2937}
-  @media (max-width:800px){ .col + .col{border-left:0; border-top:1px solid #1f2937} }
-
-  .title{font-size:22px; font-weight:900; display:flex; align-items:center; gap:10px}
-  .pad{margin-top:12px}
-  .box{background:rgba(15,23,42,.6); border:1px solid var(--ring); border-radius:14px; padding:12px 14px}
-  input{width:100%; background:#0b1220; border:1.6px solid #233047; color:#e5e7eb; border-radius:12px; padding:12px 14px; outline:none}
-  input:focus{border-color:#2aa3d5; box-shadow:0 0 0 4px rgba(56,189,248,.2)}
-  .row{display:flex; gap:12px; align-items:center; margin-top:12px}
-  .btn{border:0; padding:14px 16px; border-radius:12px; font-weight:900; cursor:pointer; transition:.18s}
-  .btn:active{transform:translateY(1px)}
-  .btn-pri{background:linear-gradient(90deg,var(--pri),var(--pri2)); color:#05222d}
-  .btn-pri:hover{filter:brightness(1.05)}
-  .btn-ghost{background:#0b1220; color:#8abbd5; border:1.6px solid #233047}
-  .note{font-size:12px; color:var(--muted); margin-top:8px}
-  .center{display:flex; align-items:center; gap:12px}
-  .big{font-size:15px}
+  :root{
+    --bg:#071026; --card:#0f1724; --accent:#2563eb; --muted:#98abc5;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  html,body{height:100%;margin:0;background:
+    radial-gradient(900px 400px at 70% -10%, rgba(37,99,235,0.12), transparent),
+    linear-gradient(180deg,#02040a,#071026); color:#e8f2ff; display:flex; align-items:center; justify-content:center;}
+  .card{width:460px; max-width:94%; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); border-radius:12px; padding:22px; box-shadow:0 10px 40px rgba(2,6,23,0.6)}
+  h1{margin:0 0 6px 0; font-size:20px}
+  p.lead{margin:0 0 14px 0; color:var(--muted)}
+  label{display:block;font-size:13px;color:var(--muted); margin-bottom:6px}
+  input[type="password"]{width:100%; padding:12px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:rgba(255,255,255,0.01); color:inherit; box-sizing:border-box}
+  .row{display:flex; gap:8px; margin-top:12px}
+  .btn{padding:10px 14px; border-radius:10px; background:linear-gradient(90deg,var(--accent),#1e40af); color:white; border:none; cursor:pointer; font-weight:600}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04); color:var(--muted)}
+  .muted{color:var(--muted);font-size:13px;margin-top:12px}
+  .feedback{height:18px;margin-top:8px;color:#ffb4b4;font-size:13px}
+  .small{font-size:13px;color:var(--muted)}
+  .hint{font-size:12px; color: rgba(255,255,255,0.6); margin-top:8px}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="head">
-    <div class="brand">🎓 Advanced Diploma In Computer Application Quiz</div>
-    <div class="muted">Ideal Computer Centre — Hatta • Chainpur • Kaimur</div>
-  </div>
+  <div class="card" role="dialog" aria-labelledby="title">
+    <h1 id="title">Quiz — Password Required</h1>
+    <p class="lead">Is quiz ko kholne ke liye password darj karein. Agar aap teacher/administrator hain to valid password use karein.</p>
 
-  <div class="grid">
-    <!-- Left: Password path (opens Apps Script index.html) -->
-    <div class="col">
-      <div class="title">🔒 Access Required</div>
-      <div class="pad muted">Teacher/Admin students: पासवर्ड डालकर पूरा टेस्ट खोलें</div>
-      <div class="box pad">
-        <input id="pwd" type="password" placeholder="Enter password (e.g., quizideal)" autocomplete="new-password">
-      </div>
-      <div class="row">
-        <button class="btn btn-pri big" onclick="openIndex()">Unlock & Continue</button>
-        <button class="btn btn-ghost" onclick="document.getElementById('pwd').value=''">Clear</button>
-      </div>
-      <div class="note">Hint: अपने Teacher से पूछें</div>
+    <label for="pwd">Password</label>
+    <input id="pwd" type="password" autocomplete="off" placeholder="Password dijiye" />
+
+    <div class="row">
+      <button id="unlockBtn" class="btn">Unlock</button>
+      <button id="clearBtn" class="btn ghost">Clear</button>
     </div>
 
-    <!-- Right: Bypass practice -->
-    <div class="col">
-      <div class="title">🔓 Without Password</div>
-      <div class="pad muted">यदि पासवर्ड नहीं है — practice/test चलाएँ (no PII submit)</div>
-      <div class="row">
-        <button class="btn btn-pri big" onclick="openBypass()">Bypass Quiz — Open Practice</button>
-      </div>
-      <div class="note">Bypass से basic demo/practice खुलेगा — यह सीधे GitHub Hosted ‘Quiz2026.html’/home चलाता है।</div>
-    </div>
-  </div>
-</div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
 
+    <div class="muted small">Contact admin if you don't have the password.</div>
+    <div class="hint">Note: This is a convenience gate. For strong security store passwords server-side.</div>
+  </div>
+
+<script src="config.js"></script>
 <script>
-  // === CONFIG ===
-  // Apps Script deployment URL (आपका latest)
-  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbyC_kGdWjTuMOm0-blHhqjyn4mq_iJKkhTYr6zMj_NMVQd0EZgcgfM2ztjNWCoRW3q2/exec';
-  // Acceptable passwords (client-side gate; असली अधिकार Apps Script पर रहते हैं)
-  const VALID_PASSWORDS = ['hatta2025','quizideal','adca2025','ICC2026'];
+/*
+  Behavior:
+  - Validates password client-side against allowed list
+  - On success: redirects browser to Apps Script webapp URL from config.js
+  - We also add optional localStorage pass-through of registration (if present)
+*/
 
-  // Left button -> Apps Script index.html
-  function openIndex(){
-    const v = (document.getElementById('pwd').value || '').trim().toLowerCase();
-    if(!VALID_PASSWORDS.includes(v)){
-      alert('गलत पासवर्ड'); return;
-    }
-    // sessionStorage flag (index.html चाहे तो चेक कर ले)
-    try{ sessionStorage.setItem('quizUnlocked','1'); }catch(_){}
-    // Apps Script index page (doGet default -> index file)
-    window.location.href = ENDPOINT + '?action=index';
+const VALID_PASSWORDS = ['hatta2025','quizideal','adca2025'];
+
+const unlockBtn = document.getElementById('unlockBtn');
+const clearBtn = document.getElementById('clearBtn');
+const pwdInput = document.getElementById('pwd');
+const fb = document.getElementById('feedback');
+
+function showMessage(msg, ok=true){
+  fb.textContent = msg;
+  fb.style.color = ok ? '#b6ffcd' : '#ffb4b4';
+}
+
+function clearMessage(){
+  fb.textContent = '';
+}
+
+clearBtn.addEventListener('click', ()=> {
+  pwdInput.value = '';
+  pwdInput.focus();
+  clearMessage();
+});
+
+pwdInput.addEventListener('keydown', (e)=> {
+  if(e.key === 'Enter') unlockBtn.click();
+});
+
+unlockBtn.addEventListener('click', ()=> {
+  const v = (pwdInput.value || '').trim();
+  if(!v){ showMessage('Please enter password', false); pwdInput.focus(); return; }
+  if(!VALID_PASSWORDS.includes(v)){
+    showMessage('गलत पासवर्ड — दुबारा कोशिश करें', false);
+    pwdInput.focus();
+    return;
   }
 
-  // Right button -> your GitHub site home
-  function openBypass(){
-    window.location.href = 'https://anilkumaricc.github.io/';
+  showMessage('Password accepted — Redirecting...', true);
+
+  try{ sessionStorage.setItem('quizUnlocked', '1'); }catch(e){}
+
+  // Determine destination URL from config.js (window.ADCA.INDEX_WEBAPP_URL)
+  const indexUrl = (window.ADCA && window.ADCA.INDEX_WEBAPP_URL) ? window.ADCA.INDEX_WEBAPP_URL : null;
+  if(!indexUrl){
+    showMessage('Server URL not configured. Configure INDEX_WEBAPP_URL in config.js', false);
+    return;
   }
+
+  // Optional: pass saved registration details (if present) as query params
+  const params = new URLSearchParams();
+  try{
+    const reg = JSON.parse(localStorage.getItem('ADCA_REG') || '{}');
+    if(reg.pi) params.set('pi', reg.pi);
+    if(reg.roll) params.set('roll', reg.roll);
+  }catch(e){}
+
+  const dest = params.toString() ? (indexUrl + '?' + params.toString()) : indexUrl;
+
+  // small delay for UX
+  setTimeout(()=> { location.href = dest; }, 300);
+});
 </script>
 </body>
 </html>
