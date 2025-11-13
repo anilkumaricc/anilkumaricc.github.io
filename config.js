@@ -1,6 +1,17 @@
 // FILE: config.js
 // Put this file on your GitHub Pages repo (same domain as Quiz2026.html).
-// INDEX_WEBAPP_URL points to your deployed Apps Script Web App (you provided it).
+// Keep ENDPOINT, PRIMARY_KEY and ADMIN_KEY exactly as below.
+
 window.ADCA = {
-  INDEX_WEBAPP_URL: "https://script.google.com/macros/s/AKfycbyC_kGdWjTuMOm0-blHhqjyn4mq_iJKkhTYr6zMj_NMVQd0EZgcgfM2ztjNWCoRW3q2/exec"
+  // Your deployed Apps Script Web App (use the /exec URL)
+  ENDPOINT: "https://script.google.com/macros/s/AKfycbyC_kGdWjTuMOm0-blHhqjyn4mq_iJKkhTYr6zMj_NMVQd0EZgcgfM2ztjNWCoRW3q2/exec",
+
+  // MUST match backend SCRIPT_PROPS.PRIMARY_KEY & ADMIN_KEY
+  PRIMARY_KEY: "primary_Ea7f4c2b",
+  ADMIN_KEY: "admin_Zk3q9p8X",
+
+  // Optional client-side toggles (safe defaults)
+  USE_SHEET_QUESTIONS: true,
+  TOKEN_TTL_SEC: 600,
+  DUP_WINDOW_MIN: 3
 };
